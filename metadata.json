@@ -1,0 +1,6 @@
+{
+  "name": "BoardAce AI — Class 12 CBSE Board Quiz",
+  "description": "NCERT-aligned practice quizzes, conceptual problem solving, and CBSE Class 12 board exam preparation for Physics, Chemistry, and Mathematics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
