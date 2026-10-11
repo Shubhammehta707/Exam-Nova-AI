@@ -14,16 +14,24 @@ import { ReferencesPage } from './components/ReferencesPage';
 import { AnalyticsView } from './components/AnalyticsView';
 import { OnboardingModal } from './components/OnboardingModal';
 import { Footer } from './components/Footer';
+import { AuthScreen } from './components/AuthScreen';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { Question, QuizAttemptRecord, QuizConfig, Subject, UserAnswer, UserStats } from './types/quiz';
 import {
   getQuizHistory,
   saveQuizAttempt,
   clearQuizHistory,
   calculateUserStats,
+  saveQuizAttemptToFirestore,
+  fetchQuizHistoryFromFirestore,
+  clearQuizHistoryFromFirestore,
 } from './services/storage';
 import { fetchQuizQuestions } from './services/api';
+import { GraduationCap, Loader2 } from 'lucide-react';
 
-export default function App() {
+function ExamNovaMainApp() {
+  const { user, loading } = useAuth();
+
   // Navigation & View States
   const [currentView, setCurrentView] = useState<'dashboard' | 'setup' | 'references' | 'analytics'>('dashboard');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -56,20 +64,34 @@ export default function App() {
   // Student Onboarding Guide Modal State
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
 
-  // Load history & calculate initial stats on mount + check onboarding
+  // Load history & calculate initial stats on mount or user change
   useEffect(() => {
     const loadedHistory = getQuizHistory();
     setHistory(loadedHistory);
     setStats(calculateUserStats(loadedHistory));
 
-    // Show onboarding on first visit if student hasn't seen it yet
-    const hasSeenOnboarding =
-      localStorage.getItem('examnova_onboarding_viewed') ||
-      localStorage.getItem('boardace_onboarding_viewed');
-    if (!hasSeenOnboarding) {
-      setIsOnboardingOpen(true);
+    if (user) {
+      // Async sync from Firestore
+      fetchQuizHistoryFromFirestore(user.uid)
+        .then((cloudHistory) => {
+          if (cloudHistory && cloudHistory.length > 0) {
+            setHistory(cloudHistory);
+            setStats(calculateUserStats(cloudHistory));
+          }
+        })
+        .catch((err) => {
+          console.warn('Firestore cloud history sync notice:', err);
+        });
+
+      // Show onboarding on first visit if student hasn't seen it yet
+      const hasSeenOnboarding =
+        localStorage.getItem('examnova_onboarding_viewed') ||
+        localStorage.getItem('boardace_onboarding_viewed');
+      if (!hasSeenOnboarding) {
+        setIsOnboardingOpen(true);
+      }
     }
-  }, []);
+  }, [user]);
 
   const handleCloseOnboarding = () => {
     localStorage.setItem('examnova_onboarding_viewed', 'true');
@@ -119,8 +141,6 @@ export default function App() {
   const handleCompleteQuiz = (answers: UserAnswer[], timeTakenSeconds: number) => {
     if (!activeQuizConfig || activeQuestions.length === 0) return;
 
-    // Calculate score purely from actual submitted answers vs question answer keys
-    // Award 1 mark for each correct answer; 0 negative marks for this practice MVP
     let score = 0;
     const auditedAnswers: UserAnswer[] = [];
 
@@ -159,6 +179,13 @@ export default function App() {
     const updatedHistory = saveQuizAttempt(record);
     setHistory(updatedHistory);
     setStats(calculateUserStats(updatedHistory));
+
+    // Sync to Firestore if authenticated
+    if (user) {
+      saveQuizAttemptToFirestore(user.uid, record).catch((err) => {
+        console.warn('Failed to sync quiz attempt to Firestore:', err);
+      });
+    }
 
     setActiveAttemptRecord(record);
     setActiveQuizState('results');
@@ -203,6 +230,11 @@ export default function App() {
     clearQuizHistory();
     setHistory([]);
     setStats(calculateUserStats([]));
+    if (user) {
+      clearQuizHistoryFromFirestore(user.uid).catch((err) => {
+        console.warn('Failed to clear Firestore history:', err);
+      });
+    }
   };
 
   // Drill a specific weak topic
@@ -211,6 +243,58 @@ export default function App() {
     handleOpenSetup(subj, chapter);
   };
 
+  // 1. Loading Authentication State Splash
+  if (loading) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-[#0b172a] text-white selection:bg-blue-600 px-4">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-400 shadow-xl shadow-blue-500/25 mb-4 animate-pulse">
+          <GraduationCap className="h-8 w-8 text-white" />
+        </div>
+        <h2 className="text-xl font-black tracking-tight sm:text-2xl">
+          Exam Nova <span className="text-blue-400">AI</span>
+        </h2>
+        <p className="text-xs text-slate-400 mt-1">Class 12 CBSE Board Examination Platform</p>
+        <div className="mt-6 flex items-center gap-2.5 rounded-full bg-slate-900 border border-slate-800 px-4 py-2 text-xs font-semibold text-slate-300">
+          <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
+          <span>Verifying student session...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // 2. Unauthenticated Gate: Protect dashboard and quiz practice
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between">
+        <header className="flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white/95 px-4 sm:px-8 backdrop-blur-md">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0b172a] text-white shadow-xs">
+              <GraduationCap className="h-5 w-5 text-blue-400" />
+            </div>
+            <div>
+              <h1 className="text-base font-extrabold text-slate-900 tracking-tight sm:text-lg">
+                Exam Nova <span className="text-blue-600">AI</span>
+              </h1>
+            </div>
+          </div>
+          <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 border border-blue-200">
+            CBSE 2026–27
+          </span>
+        </header>
+
+        <main className="flex-1">
+          <AuthScreen />
+        </main>
+
+        <Footer
+          onNavigateToSyllabus={() => {}}
+          onOpenGuide={() => {}}
+        />
+      </div>
+    );
+  }
+
+  // 3. Authenticated Student Workspace: Dashboard & Quiz features unlocked
   return (
     <div className="flex min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-blue-600 selection:text-white">
       {/* Desktop / Mobile Sidebar */}
@@ -326,5 +410,13 @@ export default function App() {
         onStartPractising={handleStartFromOnboarding}
       />
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <ExamNovaMainApp />
+    </AuthProvider>
   );
 }

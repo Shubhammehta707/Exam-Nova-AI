@@ -12,8 +12,11 @@ import {
   ShieldCheck,
   HelpCircle,
   Heart,
+  LogOut,
+  UserCheck,
 } from 'lucide-react';
 import { Subject } from '../types/quiz';
+import { useAuth } from '../context/AuthContext';
 
 interface SidebarProps {
   currentView: 'dashboard' | 'setup' | 'references' | 'analytics';
@@ -32,6 +35,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
   mobileOpen,
   onCloseMobile,
 }) => {
+  const { user, userProfile, logout } = useAuth();
+  const displayName =
+    userProfile?.displayName || user?.displayName || (user?.email ? user.email.split('@')[0] : 'Student');
+  const userInitials = displayName
+    .split(' ')
+    .map((part) => part[0])
+    .join('')
+    .substring(0, 2)
+    .toUpperCase() || 'S';
   const navItems = [
     { id: 'dashboard' as const, label: 'Dashboard', icon: LayoutDashboard },
     { id: 'setup' as const, label: 'Start Practising', icon: PlayCircle },
@@ -173,6 +185,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Footer / Student Guide CTA & Attribution */}
         <div className="border-t border-slate-800/90 p-3.5 space-y-2">
+          {/* Authenticated Student Card */}
+          {user && (
+            <div className="flex items-center justify-between gap-2 rounded-xl bg-slate-900/90 border border-slate-800 p-2.5 mb-1 text-xs">
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-[10px] font-black text-white">
+                  {userInitials}
+                </div>
+                <div className="min-w-0">
+                  <p className="truncate font-bold text-white text-xs">{displayName}</p>
+                  <p className="truncate text-[10px] text-slate-400">{user.email}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => logout()}
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-rose-400 transition-colors cursor-pointer shrink-0"
+                title="Log Out"
+                aria-label="Log Out"
+              >
+                <LogOut className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+
           <button
             onClick={() => {
               onOpenGuide();

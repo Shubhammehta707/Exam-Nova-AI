@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all access across all collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // Student Profile
+    match /users/{userId} {
+      allow get: if isValidId(userId) && isOwner(userId);
+      allow list: if false;
+
+      allow create: if isValidId(userId) && isOwner(userId)
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 256;
+
+      allow update: if isValidId(userId) && isOwner(userId)
+        && request.resource.data.userId == resource.data.userId
+        && (!('email' in request.resource.data) || request.resource.data.email is string);
+
+      allow delete: if false;
+
+      // Student Quiz Attempt History Subcollection
+      match /attempts/{attemptId} {
+        allow get: if isValidId(userId) && isValidId(attemptId) && isOwner(userId);
+        allow list: if isValidId(userId) && isOwner(userId);
+
+        allow create: if isValidId(userId) && isValidId(attemptId) && isOwner(userId)
+          && request.resource.data.userId == request.auth.uid
+          && request.resource.data.score is number
+          && request.resource.data.total is number
+          && request.resource.data.percentage is number;
+
+        allow update: if false; // Quiz attempts are immutable audit records
+
+        allow delete: if isValidId(userId) && isValidId(attemptId) && isOwner(userId);
+      }
+    }
+  }
+}

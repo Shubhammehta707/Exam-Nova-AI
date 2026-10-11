@@ -1,6 +1,7 @@
 import React from 'react';
-import { Menu, Play, Sparkles, GraduationCap, HelpCircle, Award } from 'lucide-react';
+import { Menu, Play, GraduationCap, HelpCircle, Award, LogOut, User as UserIcon } from 'lucide-react';
 import { UserStats } from '../types/quiz';
+import { useAuth } from '../context/AuthContext';
 
 interface HeaderProps {
   onOpenMobileSidebar: () => void;
@@ -15,6 +16,17 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenGuide,
   stats,
 }) => {
+  const { user, userProfile, logout, authActionLoading } = useAuth();
+
+  const displayName =
+    userProfile?.displayName || user?.displayName || (user?.email ? user.email.split('@')[0] : 'Student');
+  const userInitials = displayName
+    .split(' ')
+    .map((part) => part[0])
+    .join('')
+    .substring(0, 2)
+    .toUpperCase() || 'S';
+
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200/90 bg-white/95 px-4 backdrop-blur-md sm:px-6 shadow-2xs">
       {/* Left Branding & Mobile Trigger */}
@@ -48,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Right Actions & Prominent CTA */}
-      <div className="flex items-center gap-2.5 sm:gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         {/* Onboarding Guide button */}
         <button
           onClick={onOpenGuide}
@@ -76,12 +88,41 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Prominent Start Practising Button */}
         <button
           onClick={onOpenQuizSetup}
-          className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-blue-600/25 hover:bg-blue-700 active:scale-95 transition-all cursor-pointer"
+          className="group inline-flex items-center gap-2 rounded-xl bg-blue-600 px-3.5 py-2 text-xs font-bold text-white shadow-md shadow-blue-600/25 hover:bg-blue-700 active:scale-95 transition-all cursor-pointer"
         >
           <Play className="h-3.5 w-3.5 fill-current text-blue-100 group-hover:scale-110 transition-transform" />
-          <span>Start Practising</span>
+          <span className="hidden xs:inline">Start Practising</span>
+          <span className="xs:hidden">Quiz</span>
         </button>
+
+        {/* Authenticated Student Profile & Logout */}
+        {user && (
+          <div className="flex items-center gap-1.5 pl-1 border-l border-slate-200">
+            <div
+              className="flex items-center gap-2 rounded-xl bg-slate-50 border border-slate-200/80 px-2.5 py-1 text-xs"
+              title={`Logged in as ${user.email || displayName}`}
+            >
+              <div className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-600 text-[10px] font-black text-white shadow-2xs">
+                {userInitials}
+              </div>
+              <span className="hidden font-bold text-slate-800 md:inline max-w-[100px] truncate">
+                {displayName}
+              </span>
+            </div>
+
+            <button
+              onClick={() => logout()}
+              disabled={authActionLoading}
+              className="rounded-xl border border-slate-200 bg-white p-2 text-slate-500 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition-colors cursor-pointer"
+              title="Sign Out"
+              aria-label="Sign Out"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        )}
       </div>
     </header>
   );
 };
+

@@ -1,0 +1,90 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Student profile information",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the student"
+        },
+        "email": {
+          "type": "string",
+          "description": "Student email address"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Student display name or screen name"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Account registration timestamp"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Last profile update timestamp"
+        }
+      },
+      "required": ["userId", "email"]
+    },
+    "QuizAttempt": {
+      "title": "QuizAttempt",
+      "description": "Recorded student quiz attempt with performance details",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "UID of student who took the quiz"
+        },
+        "id": {
+          "type": "string",
+          "description": "Unique quiz attempt identifier"
+        },
+        "date": {
+          "type": "string",
+          "description": "ISO date string of completion"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject: Physics, Chemistry, or Mathematics"
+        },
+        "chapter": {
+          "type": "string",
+          "description": "Topic or chapter name"
+        },
+        "difficulty": {
+          "type": "string",
+          "description": "Difficulty level: Easy, Medium, Hard"
+        },
+        "score": {
+          "type": "number",
+          "description": "Number of correct answers"
+        },
+        "total": {
+          "type": "number",
+          "description": "Total number of questions"
+        },
+        "percentage": {
+          "type": "number",
+          "description": "Percentage score 0-100"
+        },
+        "timeTakenSeconds": {
+          "type": "number",
+          "description": "Duration spent on the quiz"
+        }
+      },
+      "required": ["userId", "id", "subject", "score", "total", "percentage"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Individual student profiles stored by their Auth UID"
+    },
+    "/users/{userId}/attempts/{attemptId}": {
+      "schema": "QuizAttempt",
+      "description": "Historical quiz attempts for the authenticated student"
+    }
+  }
+}

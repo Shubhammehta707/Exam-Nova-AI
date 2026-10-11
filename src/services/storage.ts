@@ -1,3 +1,5 @@
+import { doc, setDoc, getDocs, collection, query, orderBy, limit, deleteDoc } from 'firebase/firestore';
+import { db, handleFirestoreError, OperationType } from './firebase';
 import { QuizAttemptRecord, QuizConfig, Subject, UserStats } from '../types/quiz';
 
 const STORAGE_KEY = 'examnova_quiz_history_v1';
@@ -108,3 +110,78 @@ export function getWeakTopics(stats: UserStats, limit: number = 4) {
     })
     .slice(0, limit);
 }
+
+// Save quiz attempt directly to Firestore subcollection /users/{userId}/attempts/{attemptId}
+export async function saveQuizAttemptToFirestore(
+  userId: string,
+  attempt: QuizAttemptRecord
+): Promise<void> {
+  const attemptPath = `users/${userId}/attempts/${attempt.id}`;
+  try {
+    const attemptRef = doc(db, 'users', userId, 'attempts', attempt.id);
+    await setDoc(attemptRef, {
+      id: attempt.id,
+      userId,
+      date: attempt.date,
+      subject: attempt.config.subject,
+      chapter: attempt.config.chapter,
+      difficulty: attempt.config.difficulty,
+      mode: attempt.config.mode,
+      score: attempt.score,
+      total: attempt.total,
+      percentage: attempt.percentage,
+      timeTakenSeconds: attempt.timeTakenSeconds,
+      config: attempt.config,
+      answers: attempt.answers,
+      questions: attempt.questions,
+    });
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, attemptPath);
+  }
+}
+
+// Fetch historical attempts for authenticated user from Firestore
+export async function fetchQuizHistoryFromFirestore(
+  userId: string
+): Promise<QuizAttemptRecord[]> {
+  const attemptsCollectionPath = `users/${userId}/attempts`;
+  try {
+    const attemptsRef = collection(db, 'users', userId, 'attempts');
+    const q = query(attemptsRef, orderBy('date', 'desc'), limit(50));
+    const querySnapshot = await getDocs(q);
+
+    const records: QuizAttemptRecord[] = [];
+    querySnapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      records.push({
+        id: data.id || docSnap.id,
+        date: data.date,
+        config: data.config,
+        score: data.score,
+        total: data.total,
+        percentage: data.percentage,
+        timeTakenSeconds: data.timeTakenSeconds || 0,
+        answers: data.answers || [],
+        questions: data.questions || [],
+      });
+    });
+
+    return records;
+  } catch (error) {
+    handleFirestoreError(error, OperationType.LIST, attemptsCollectionPath);
+  }
+}
+
+// Clear attempts from Firestore
+export async function clearQuizHistoryFromFirestore(userId: string): Promise<void> {
+  const attemptsCollectionPath = `users/${userId}/attempts`;
+  try {
+    const attemptsRef = collection(db, 'users', userId, 'attempts');
+    const querySnapshot = await getDocs(attemptsRef);
+    const deletePromises = querySnapshot.docs.map((d) => deleteDoc(d.ref));
+    await Promise.all(deletePromises);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.DELETE, attemptsCollectionPath);
+  }
+}
+
