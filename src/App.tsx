@@ -177,8 +177,14 @@ export default function App() {
   // Retake quiz with same parameters
   const handleRetakeQuiz = () => {
     if (activeAttemptRecord) {
+      setSetupInitialSubject(activeAttemptRecord.config.subject);
+      setSetupInitialChapter(activeAttemptRecord.config.chapter);
+      setIsSetupModalOpen(true);
       handleStartQuiz(activeAttemptRecord.config);
     } else if (activeQuizConfig) {
+      setSetupInitialSubject(activeQuizConfig.subject);
+      setSetupInitialChapter(activeQuizConfig.chapter);
+      setIsSetupModalOpen(true);
       handleStartQuiz(activeQuizConfig);
     } else {
       handleOpenSetup();

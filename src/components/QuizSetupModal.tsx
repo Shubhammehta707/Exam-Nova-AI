@@ -92,13 +92,77 @@ export const QuizSetupModal: React.FC<QuizSetupModalProps> = ({
         </div>
 
         {/* Form Body */}
-        <div className="max-h-[75vh] overflow-y-auto p-6 space-y-6">
+        <div className="relative max-h-[75vh] overflow-y-auto p-6 space-y-6">
+          {/* Active Generation Loading Overlay */}
+          {isLoading && (
+            <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-white/95 p-6 backdrop-blur-xs text-center animate-in fade-in duration-200">
+              <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600 shadow-md border border-blue-100 mb-4">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+                <Sparkles className="absolute -top-1 -right-1 h-5 w-5 text-amber-500 animate-pulse" />
+              </div>
+              <h3 className="text-base font-extrabold text-slate-900">
+                Generating Fresh CBSE Questions
+              </h3>
+              <p className="mt-1 text-xs text-slate-600 max-w-sm">
+                Gemini AI is formulating original, board-standard MCQs strictly aligned with the official CBSE 2026–27 curriculum and NCERT textbooks.
+              </p>
+
+              <div className="mt-5 w-full max-w-xs space-y-2 rounded-xl bg-slate-50 p-3.5 border border-slate-200/80 text-left text-xs text-slate-700">
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-slate-500">Subject & Topic:</span>
+                  <span className="font-bold text-blue-700 truncate max-w-[170px]">
+                    {subject} • {chapter === 'all' ? 'Full Syllabus' : chapter}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-slate-500">Difficulty & Count:</span>
+                  <span className="font-bold text-slate-800">
+                    {difficulty} • {questionCount} MCQs
+                  </span>
+                </div>
+                <div className="flex items-center gap-1.5 pt-1 text-[11px] text-emerald-700 font-medium">
+                  <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-ping" />
+                  <span>Validating step-by-step NCERT solutions...</span>
+                </div>
+              </div>
+
+              <p className="mt-4 text-[11px] text-slate-400">
+                Waiting for API response... Typically takes 3–5 seconds.
+              </p>
+            </div>
+          )}
+
           {error && (
-            <div className="flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4 text-rose-800">
-              <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-rose-600" />
-              <div className="text-xs leading-relaxed">
-                <p className="font-bold">Generation Notice</p>
-                <p>{error}</p>
+            <div className="flex flex-col gap-2 rounded-xl border border-rose-300 bg-rose-50 p-4 text-rose-900 shadow-xs">
+              <div className="flex items-start gap-2.5">
+                <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-rose-600" />
+                <div className="text-xs leading-relaxed flex-1">
+                  <p className="font-bold text-rose-950">Generation Notice</p>
+                  <p className="mt-0.5 text-rose-800">{error}</p>
+                </div>
+              </div>
+              {error.includes('GEMINI_API_KEY') && (
+                <div className="mt-1 rounded-lg bg-rose-100/80 p-2.5 text-[11px] text-rose-900 border border-rose-200">
+                  <span className="font-semibold">How to fix on Netlify:</span> In your Netlify dashboard, go to <strong>Site configuration &gt; Environment variables</strong>, add <code>GEMINI_API_KEY</code> with your Google AI Studio key, and trigger a redeploy.
+                </div>
+              )}
+              <div className="mt-1 flex items-center justify-end">
+                <button
+                  type="button"
+                  onClick={() =>
+                    onStartQuiz({
+                      subject,
+                      chapter,
+                      difficulty,
+                      questionCount,
+                      mode,
+                    })
+                  }
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-rose-700 px-3 py-1.5 text-xs font-bold text-white hover:bg-rose-800 transition-colors cursor-pointer"
+                >
+                  <Play className="h-3 w-3 fill-current" />
+                  <span>Retry Question Generation</span>
+                </button>
               </div>
             </div>
           )}
