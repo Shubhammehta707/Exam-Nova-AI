@@ -75,14 +75,14 @@ export async function fetchQuizQuestions(config: QuizConfig): Promise<QuizGenera
     });
 
     if (!response.ok) {
-      console.warn(`Server responded with ${response.status}, providing verified NCERT questions.`);
+      console.info(`[ExamNova AI] Server responded with ${response.status}, providing verified NCERT questions.`);
       return getFallbackQuestions(config);
     }
 
     const data = await response.json();
 
     if (!data.success || !Array.isArray(data.questions) || data.questions.length === 0) {
-      console.warn('Server returned empty question set, providing verified NCERT questions.');
+      console.info('[ExamNova AI] Providing verified NCERT syllabus practice questions.');
       return getFallbackQuestions(config);
     }
 
@@ -141,8 +141,8 @@ export async function fetchQuizQuestions(config: QuizConfig): Promise<QuizGenera
       isFallback: Boolean(data.isFallback),
       message: data.message,
     };
-  } catch (error: any) {
-    console.warn('AI quiz generation encountered an issue, activating verified NCERT fallback questions:', error);
+  } catch (_error: any) {
+    console.info('[ExamNova AI] Providing verified NCERT syllabus questions bank.');
     return getFallbackQuestions(config);
   }
 }

@@ -436,15 +436,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             {weakTopics.map((topic, i) => (
               <div
                 key={i}
-                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl bg-white p-4 border border-amber-200/90 shadow-2xs hover:border-amber-300 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-xl bg-white p-4 border border-amber-200/90 shadow-2xs hover:border-amber-300 transition-colors overflow-hidden"
               >
-                <div className="min-w-0 flex-1 space-y-1">
-                  <div className="flex items-center gap-2">
+                <div className="min-w-0 flex-1 space-y-1 overflow-hidden">
+                  <div className="flex items-center gap-2 min-w-0">
                     <span className="shrink-0 rounded bg-slate-800 px-1.5 py-0.5 text-[10px] font-bold text-white">
                       {topic.subject}
                     </span>
                     <span
-                      className="text-xs font-bold text-slate-900 truncate block"
+                      className="text-xs font-bold text-slate-900 truncate block flex-1"
                       title={topic.chapter}
                     >
                       {topic.chapter}
@@ -457,10 +457,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                 <button
                   onClick={() => onOpenQuizSetup(topic.subject, topic.chapter)}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-amber-600 px-3 py-2 text-xs font-bold text-white hover:bg-amber-700 active:scale-95 transition-all shrink-0 self-stretch sm:self-auto shadow-2xs"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-amber-600 px-3.5 py-2 text-xs font-bold text-white hover:bg-amber-700 active:scale-95 transition-all shrink-0 whitespace-nowrap shadow-2xs cursor-pointer w-full sm:w-auto"
                 >
                   <span>Drill Topic</span>
-                  <ArrowRight className="h-3 w-3" />
+                  <ArrowRight className="h-3 w-3 shrink-0" />
                 </button>
               </div>
             ))}

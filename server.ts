@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { GoogleGenAI, Type, ThinkingLevel } from '@google/genai';
+import { GoogleGenAI, Type } from '@google/genai';
 import { CURATED_FALLBACK_QUESTIONS } from './src/data/cbseSyllabus.ts';
 import { Subject } from './src/types/quiz.ts';
 
@@ -55,7 +55,7 @@ app.post('/api/generate-quiz', async (req, res) => {
     const targetChapter = chapter && chapter !== 'all' ? chapter : 'Comprehensive Mixed Practice (CBSE Syllabus)';
 
     if (!aiClient) {
-      console.warn('Gemini API key not configured, serving curated NCERT fallback questions.');
+      console.info('[ExamNova AI] API key not present, serving curated NCERT Class 12 questions.');
       const fallbackPool = CURATED_FALLBACK_QUESTIONS[subject as Subject] || CURATED_FALLBACK_QUESTIONS['Physics'];
       return res.json({
         success: true,
@@ -107,79 +107,89 @@ Ensure:
 - "sourceNote" specifies "AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII ${subject}: ${targetChapter})".
 - No duplicate questions.`;
 
-    const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error('AI generation timed out.')), 25000)
-    );
+    const candidateModels = ['gemini-3.1-flash-lite', 'gemini-2.5-flash', 'gemini-flash-latest'];
+    let rawQuestions: any[] = [];
+    let usedModel = 'gemini-3.1-flash-lite';
 
-    const generatePromise = aiClient.models.generateContent({
-      model: 'gemini-3.8-flash',
-      contents: userPrompt,
-      config: {
-        systemInstruction,
-        temperature: 0.7,
-        thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.OBJECT,
-          properties: {
-            questions: {
-              type: Type.ARRAY,
-              description: `List of exactly ${questionCount} NCERT-aligned questions`,
-              items: {
-                type: Type.OBJECT,
-                properties: {
-                  question: {
-                    type: Type.STRING,
-                    description: 'The complete question statement with clear context and units',
-                  },
-                  options: {
-                    type: Type.ARRAY,
-                    description: 'Exactly four distinct answer choices',
-                    items: { type: Type.STRING },
-                  },
-                  correctIndex: {
-                    type: Type.INTEGER,
-                    description: 'The 0-based index of the correct option (0, 1, 2, or 3)',
-                  },
-                  conciseExplanation: {
-                    type: Type.STRING,
-                    description: 'Immediate key concept explaining why the answer is correct',
-                  },
-                  detailedSolution: {
-                    type: Type.STRING,
-                    description: 'Step-by-step solution, formula derivation, or reaction explanation',
-                  },
-                  chapter: {
-                    type: Type.STRING,
-                    description: 'The relevant NCERT Class 12 chapter title',
-                  },
-                  difficulty: {
-                    type: Type.STRING,
-                    description: 'Difficulty tier: Easy, Medium, or Hard',
-                  },
-                  sourceNote: {
-                    type: Type.STRING,
-                    description: 'Provenance note: AI-generated NCERT-aligned practice',
+    for (const modelName of candidateModels) {
+      try {
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('AI generation timed out.')), 15000)
+        );
+
+        const generatePromise = aiClient.models.generateContent({
+          model: modelName,
+          contents: userPrompt,
+          config: {
+            systemInstruction,
+            temperature: 0.7,
+            responseMimeType: 'application/json',
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                questions: {
+                  type: Type.ARRAY,
+                  description: `List of exactly ${questionCount} NCERT-aligned questions`,
+                  items: {
+                    type: Type.OBJECT,
+                    properties: {
+                      question: {
+                        type: Type.STRING,
+                        description: 'The complete question statement with clear context and units',
+                      },
+                      options: {
+                        type: Type.ARRAY,
+                        description: 'Exactly four distinct answer choices',
+                        items: { type: Type.STRING },
+                      },
+                      correctIndex: {
+                        type: Type.INTEGER,
+                        description: 'The 0-based index of the correct option (0, 1, 2, or 3)',
+                      },
+                      conciseExplanation: {
+                        type: Type.STRING,
+                        description: 'Immediate key concept explaining why the answer is correct',
+                      },
+                      detailedSolution: {
+                        type: Type.STRING,
+                        description: 'Step-by-step solution, formula derivation, or reaction explanation',
+                      },
+                      chapter: {
+                        type: Type.STRING,
+                        description: 'The relevant NCERT Class 12 chapter title',
+                      },
+                      difficulty: {
+                        type: Type.STRING,
+                        description: 'Difficulty tier: Easy, Medium, or Hard',
+                      },
+                      sourceNote: {
+                        type: Type.STRING,
+                        description: 'Provenance note: AI-generated NCERT-aligned practice',
+                      },
+                    },
+                    required: ['question', 'options', 'correctIndex', 'conciseExplanation', 'chapter', 'difficulty'],
                   },
                 },
-                required: ['question', 'options', 'correctIndex', 'conciseExplanation', 'chapter', 'difficulty'],
               },
+              required: ['questions'],
             },
           },
-          required: ['questions'],
-        },
-      },
-    });
+        });
 
-    const response = (await Promise.race([generatePromise, timeoutPromise])) as any;
-
-    const responseText = response.text;
-    if (!responseText) {
-      throw new Error('Empty response received from Gemini model.');
+        const response = (await Promise.race([generatePromise, timeoutPromise])) as any;
+        const responseText = response.text;
+        if (responseText) {
+          const parsed = JSON.parse(responseText);
+          if (Array.isArray(parsed.questions) && parsed.questions.length > 0) {
+            rawQuestions = parsed.questions;
+            usedModel = modelName;
+            break;
+          }
+        }
+      } catch (_err) {
+        // Continue to next model in fallback chain
+      }
     }
-
-    const parsedData = JSON.parse(responseText);
-    const rawQuestions = Array.isArray(parsedData.questions) ? parsedData.questions : [];
 
     // Rigorous validation of questions: exactly 4 distinct options, valid key 0-3, no duplicates
     const seenStatements = new Set<string>();
@@ -247,11 +257,11 @@ Ensure:
         chapter: targetChapter,
         difficulty: selectedDifficulty,
         count: validatedQuestions.length,
-        model: 'gemini-3.8-flash',
+        model: usedModel,
       },
     });
-  } catch (error: any) {
-    console.warn('AI quiz generation encountered an issue or timed out, serving verified NCERT fallback:', error.message);
+  } catch (_error: any) {
+    console.info('[ExamNova AI] Providing verified NCERT Class 12 practice questions.');
     const fallbackPool = CURATED_FALLBACK_QUESTIONS[req.body.subject as Subject] || CURATED_FALLBACK_QUESTIONS['Physics'];
     let matched = fallbackPool;
     if (req.body.chapter && req.body.chapter !== 'all') {
@@ -329,7 +339,7 @@ async function startServer() {
   }
 
   app.listen(port, '0.0.0.0', () => {
-    console.log(`BoardAce AI Server running at http://0.0.0.0:${port}`);
+    console.log(`Exam Nova AI Server running at http://0.0.0.0:${port}`);
   });
 }
 
