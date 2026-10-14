@@ -86,6 +86,55 @@ export function calculateUserStats(history?: QuizAttemptRecord[]): UserStats {
   };
 }
 
+export function calculateStudyStreak(attempts: QuizAttemptRecord[]): number {
+  if (!attempts || attempts.length === 0) return 0;
+
+  // Extract unique dates in YYYY-MM-DD
+  const dateSet = new Set<string>();
+  attempts.forEach((att) => {
+    try {
+      const d = new Date(att.date);
+      if (!isNaN(d.getTime())) {
+        dateSet.add(d.toISOString().split('T')[0]);
+      }
+    } catch {
+      // Ignore invalid date
+    }
+  });
+
+  const sortedDates = Array.from(dateSet).sort().reverse();
+  if (sortedDates.length === 0) return 0;
+
+  const todayStr = new Date().toISOString().split('T')[0];
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+  // Must have practiced today or yesterday to have an active streak
+  if (sortedDates[0] !== todayStr && sortedDates[0] !== yesterdayStr) {
+    return 0;
+  }
+
+  let streak = 0;
+  let expectedDate = new Date(sortedDates[0]);
+
+  for (const dateStr of sortedDates) {
+    const curDate = new Date(dateStr);
+    const diffDays = Math.round(
+      (expectedDate.getTime() - curDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    if (diffDays === 0) {
+      streak += 1;
+      expectedDate.setDate(expectedDate.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
+
 export function getWeakTopics(stats: UserStats, limit: number = 4) {
   const list = Object.entries(stats.topicPerformances).map(([key, data]) => {
     const [subject, chapter] = key.split('::');

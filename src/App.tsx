@@ -15,7 +15,11 @@ import { AnalyticsView } from './components/AnalyticsView';
 import { OnboardingModal } from './components/OnboardingModal';
 import { Footer } from './components/Footer';
 import { AuthScreen } from './components/AuthScreen';
+import { ThemeToggle } from './components/ThemeToggle';
+import { LanguageSelector } from './components/LanguageSelector';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { Question, QuizAttemptRecord, QuizConfig, Subject, UserAnswer, UserStats } from './types/quiz';
 import {
   getQuizHistory,
@@ -30,7 +34,8 @@ import { fetchQuizQuestions } from './services/api';
 import { GraduationCap, Loader2 } from 'lucide-react';
 
 function ExamNovaMainApp() {
-  const { user, loading } = useAuth();
+  const { user, loading, isGuest } = useAuth();
+  const { t, language } = useLanguage();
 
   // Navigation & View States
   const [currentView, setCurrentView] = useState<'dashboard' | 'setup' | 'references' | 'analytics'>('dashboard');
@@ -115,13 +120,19 @@ function ExamNovaMainApp() {
     setIsGeneratingQuiz(true);
     setGenerationError(null);
 
+    // Ensure language is set in config
+    const fullConfig: QuizConfig = {
+      ...config,
+      language: config.language || language,
+    };
+
     try {
-      const result = await fetchQuizQuestions(config);
+      const result = await fetchQuizQuestions(fullConfig);
       if (!result.questions || result.questions.length === 0) {
         throw new Error('Unable to construct questions for the chosen subject and topic.');
       }
 
-      setActiveQuizConfig(config);
+      setActiveQuizConfig(fullConfig);
       setActiveQuestions(result.questions);
       setIsFallbackQuestionSet(result.isFallback);
       setIsSetupModalOpen(false);
@@ -164,7 +175,7 @@ function ExamNovaMainApp() {
     const percentage = Math.round((score / total) * 100);
 
     const record: QuizAttemptRecord = {
-      id: `attempt-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      id: `attempt_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
       date: new Date().toISOString(),
       config: activeQuizConfig,
       score,
@@ -175,24 +186,23 @@ function ExamNovaMainApp() {
       questions: activeQuestions,
     };
 
-    // Save locally
+    // Save to local storage
     const updatedHistory = saveQuizAttempt(record);
     setHistory(updatedHistory);
     setStats(calculateUserStats(updatedHistory));
+    setActiveAttemptRecord(record);
+    setActiveQuizState('results');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Sync to Firestore if authenticated
     if (user) {
       saveQuizAttemptToFirestore(user.uid, record).catch((err) => {
-        console.warn('Failed to sync quiz attempt to Firestore:', err);
+        console.warn('Could not persist attempt to Firestore:', err);
       });
     }
-
-    setActiveAttemptRecord(record);
-    setActiveQuizState('results');
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Handler to quit/cancel an active quiz
+  // Handler for quitting quiz prematurely
   const handleQuitQuiz = () => {
     setActiveQuizState('idle');
     setActiveQuizConfig(null);
@@ -201,38 +211,37 @@ function ExamNovaMainApp() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Retake quiz with same parameters
+  // Handler for retaking the current quiz
   const handleRetakeQuiz = () => {
-    if (activeAttemptRecord) {
-      setSetupInitialSubject(activeAttemptRecord.config.subject);
-      setSetupInitialChapter(activeAttemptRecord.config.chapter);
-      setIsSetupModalOpen(true);
-      handleStartQuiz(activeAttemptRecord.config);
-    } else if (activeQuizConfig) {
-      setSetupInitialSubject(activeQuizConfig.subject);
-      setSetupInitialChapter(activeQuizConfig.chapter);
-      setIsSetupModalOpen(true);
-      handleStartQuiz(activeQuizConfig);
-    } else {
-      handleOpenSetup();
-    }
+    if (!activeQuizConfig) return;
+    handleStartQuiz(activeQuizConfig);
   };
 
-  // Inspect past attempt from history or dashboard
+  // Handler for viewing a past attempt
   const handleViewAttempt = (attempt: QuizAttemptRecord) => {
+    setActiveQuizConfig(attempt.config);
+    setActiveQuestions(attempt.questions);
     setActiveAttemptRecord(attempt);
     setActiveQuizState('results');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Clear history
+  // Handler for clearing all history
   const handleClearHistory = () => {
     clearQuizHistory();
     setHistory([]);
-    setStats(calculateUserStats([]));
+    setStats({
+      totalAttempted: 0,
+      totalCorrect: 0,
+      averageScorePercentage: 0,
+      totalQuizzesCompleted: 0,
+      recentAttempts: [],
+      topicPerformances: {},
+    });
+
     if (user) {
       clearQuizHistoryFromFirestore(user.uid).catch((err) => {
-        console.warn('Failed to clear Firestore history:', err);
+        console.warn('Could not clear Firestore history:', err);
       });
     }
   };
@@ -246,40 +255,45 @@ function ExamNovaMainApp() {
   // 1. Loading Authentication State Splash
   if (loading) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-[#0b172a] text-white selection:bg-blue-600 px-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-slate-50 text-slate-900 selection:bg-blue-600 px-4 dark:bg-[#070d18] dark:text-white transition-colors duration-150">
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-sky-400 shadow-xl shadow-blue-500/25 mb-4 animate-pulse">
           <GraduationCap className="h-8 w-8 text-white" />
         </div>
-        <h2 className="text-xl font-black tracking-tight sm:text-2xl">
-          Exam Nova <span className="text-blue-400">AI</span>
+        <h2 className="text-xl font-black tracking-tight sm:text-2xl text-slate-900 dark:text-white">
+          Exam Nova <span className="text-blue-600 dark:text-blue-400">AI</span>
         </h2>
-        <p className="text-xs text-slate-400 mt-1">Class 12 CBSE Board Examination Platform</p>
-        <div className="mt-6 flex items-center gap-2.5 rounded-full bg-slate-900 border border-slate-800 px-4 py-2 text-xs font-semibold text-slate-300">
-          <Loader2 className="h-4 w-4 animate-spin text-blue-400" />
-          <span>Verifying student session...</span>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{t('brandTagline')}</p>
+        <div className="mt-6 flex items-center gap-2.5 rounded-full bg-white border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-700 shadow-xs dark:bg-slate-900 dark:border-slate-800 dark:text-slate-300">
+          <Loader2 className="h-4 w-4 animate-spin text-blue-600 dark:text-blue-400" />
+          <span>{t('loading')}</span>
         </div>
       </div>
     );
   }
 
   // 2. Unauthenticated Gate: Protect dashboard and quiz practice
-  if (!user) {
+  if (!user && !isGuest) {
     return (
-      <div className="min-h-screen bg-[#f8fafc] text-slate-900 flex flex-col justify-between">
-        <header className="flex h-16 w-full items-center justify-between border-b border-slate-200 bg-white/95 px-4 sm:px-8 backdrop-blur-md">
+      <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between dark:bg-[#070d18] dark:text-slate-100 transition-colors duration-150">
+        <header className="flex h-16 w-full items-center justify-between border-b border-slate-200/90 bg-white/95 px-4 sm:px-8 backdrop-blur-md shadow-2xs dark:border-slate-800/90 dark:bg-slate-900/95 transition-colors">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0b172a] text-white shadow-xs">
-              <GraduationCap className="h-5 w-5 text-blue-400" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#0b172a] text-white shadow-xs dark:bg-blue-600">
+              <GraduationCap className="h-5 w-5 text-blue-400 dark:text-white" />
             </div>
             <div>
-              <h1 className="text-base font-extrabold text-slate-900 tracking-tight sm:text-lg">
-                Exam Nova <span className="text-blue-600">AI</span>
+              <h1 className="text-base font-extrabold text-slate-900 tracking-tight sm:text-lg dark:text-white">
+                Exam Nova <span className="text-blue-600 dark:text-blue-400">AI</span>
               </h1>
             </div>
           </div>
-          <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 border border-blue-200">
-            CBSE 2026–27
-          </span>
+
+          <div className="flex items-center gap-2.5">
+            <LanguageSelector />
+            <ThemeToggle />
+            <span className="hidden sm:inline-block rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700 border border-blue-200 dark:bg-blue-950/70 dark:text-blue-300 dark:border-blue-800">
+              {t('class12Badge')}
+            </span>
+          </div>
         </header>
 
         <main className="flex-1">
@@ -288,7 +302,14 @@ function ExamNovaMainApp() {
 
         <Footer
           onNavigateToSyllabus={() => {}}
-          onOpenGuide={() => {}}
+          onOpenGuide={() => setIsOnboardingOpen(true)}
+        />
+
+        {/* Student Onboarding Modal accessible even for prospective students */}
+        <OnboardingModal
+          isOpen={isOnboardingOpen}
+          onClose={handleCloseOnboarding}
+          onStartPractising={handleCloseOnboarding}
         />
       </div>
     );
@@ -296,7 +317,7 @@ function ExamNovaMainApp() {
 
   // 3. Authenticated Student Workspace: Dashboard & Quiz features unlocked
   return (
-    <div className="flex min-h-screen bg-[#f8fafc] text-slate-900 font-sans antialiased selection:bg-blue-600 selection:text-white">
+    <div className="flex min-h-screen bg-slate-50 text-slate-900 font-sans antialiased selection:bg-blue-600 selection:text-white dark:bg-[#070d18] dark:text-slate-100 transition-colors duration-150">
       {/* Desktop / Mobile Sidebar */}
       <Sidebar
         currentView={currentView}
@@ -415,8 +436,12 @@ function ExamNovaMainApp() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <ExamNovaMainApp />
-    </AuthProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <ExamNovaMainApp />
+        </AuthProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }

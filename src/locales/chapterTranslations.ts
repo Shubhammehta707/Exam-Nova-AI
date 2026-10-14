@@ -1,0 +1,412 @@
+import { Question, Subject } from '../types/quiz';
+
+export interface LocalizedChapter {
+  id: string;
+  nameEn: string;
+  nameHi: string;
+  subject: Subject;
+  descriptionEn: string;
+  descriptionHi: string;
+  weightageGuidelineEn: string;
+  weightageGuidelineHi: string;
+  rationalizedStatusEn: string;
+  rationalizedStatusHi: string;
+}
+
+export const CHAPTER_TRANSLATIONS: Record<string, { nameHi: string; descriptionHi: string; weightageHi?: string }> = {
+  // Physics (14 Chapters)
+  'Electric Charges and Fields': {
+    nameHi: 'वैद्युत आवेश तथा क्षेत्र',
+    descriptionHi: 'कूलॉम का नियम, अध्यारोपण सिद्धांत, सतत आवेश वितरण, विद्युत क्षेत्र, विद्युत द्विध्रुव एवं आघूर्ण, विद्युत फ्लक्स, गाउस का नियम एवं अनुप्रयोग।',
+    weightageHi: 'इकाई I (अध्याय 1 व 2) + इकाई II (अध्याय 3): 16 अंक',
+  },
+  'Electrostatic Potential and Capacitance': {
+    nameHi: 'स्थिरवैद्युत विभव तथा धारिता',
+    descriptionHi: 'विद्युत विभव, विभवांतर, समविभव पृष्ठ, चालक एवं परावैद्युत, समांतर पट्टिका संधारित्र, श्रेणी एवं समांतर संयोजन, संचित ऊर्जा।',
+    weightageHi: 'इकाई I (अध्याय 1 व 2) + इकाई II (अध्याय 3): 16 अंक',
+  },
+  'Current Electricity': {
+    nameHi: 'विद्युत धारा',
+    descriptionHi: 'विद्युत धारा, अपवाह वेग, गतिशीलता, ओम का नियम, V-I अभिलाक्षणिक, प्रतिरोधकता, आंतरिक प्रतिरोध, सेल संयोजन, किरचॉफ के नियम, व्हीटस्टोन सेतु।',
+    weightageHi: 'इकाई II: इकाई I के साथ कुल 16 अंक',
+  },
+  'Moving Charges and Magnetism': {
+    nameHi: 'गतिमान आवेश और चुंबकत्व',
+    descriptionHi: 'बायो-सावर्ट नियम, ऐम्पियर का परिपथीय नियम, परिनालिका, चुंबकीय क्षेत्र में आवेश पर बल, समांतर धाराओं के मध्य बल, चल कुंडली धारामापी।',
+    weightageHi: 'इकाई III (अध्याय 4 व 5) + इकाई IV (अध्याय 6 व 7): 17 अंक',
+  },
+  'Magnetism and Matter': {
+    nameHi: 'चुंबकत्व एवं द्रव्य',
+    descriptionHi: 'दंड चुंबक, चुंबकीय क्षेत्र रेखाएं, चुंबकीय द्विध्रुव, पदार्थों के चुंबकीय गुण (अनुचुंबकीय, प्रतिचुंबकीय, लौहचुंबकीय), ताप का प्रभाव।',
+    weightageHi: 'इकाई III: इकाई IV के साथ कुल 17 अंक',
+  },
+  'Electromagnetic Induction': {
+    nameHi: 'वैद्युतचुंबकीय प्रेरण',
+    descriptionHi: 'फैराडे के नियम, प्रेरित विद्युत वाहक बल एवं धारा, लेन्ज का नियम, स्वप्रेरण एवं अन्योन्य प्रेरण।',
+    weightageHi: 'इकाई IV: इकाई III के साथ कुल 17 अंक',
+  },
+  'Alternating Current': {
+    nameHi: 'प्रत्यावर्ती धारा',
+    descriptionHi: 'शिखर मान एवं वर्ग-माध्य-मूल मान, प्रतिघात एवं प्रतिबाधा, श्रेणी LCR परिपथ (फेजर), अनुनाद, शक्ति गुणांक, वाटहीन धारा, ट्रांसफार्मर।',
+    weightageHi: 'इकाई IV: इकाई III के साथ कुल 17 अंक',
+  },
+  'Electromagnetic Waves': {
+    nameHi: 'वैद्युतचुंबकीय तरंगें',
+    descriptionHi: 'विस्थापन धारा, अनुप्रस्थ प्रकृति, वैद्युतचुंबकीय स्पेक्ट्रम (रेडियो से गामा किरणें) एवं उनके महत्वपूर्ण उपयोग।',
+    weightageHi: 'इकाई V (अध्याय 8) + इकाई VI (अध्याय 9 व 10): 18 अंक',
+  },
+  'Ray Optics and Optical Instruments': {
+    nameHi: 'किरण प्रकाशिकी एवं प्रकाशिक यंत्र',
+    descriptionHi: 'परावर्तन, गोलीय दर्पण सूत्र, अपवर्तन, पूर्ण आंतरिक परावर्तन, लेंस सूत्र, लेंस निर्माता सूत्र, प्रिज्म, सूक्ष्मदर्शी एवं खगोलीय दूरदर्शक।',
+    weightageHi: 'इकाई VI: अध्याय 8 एवं 10 के साथ कुल 18 अंक',
+  },
+  'Wave Optics': {
+    nameHi: 'तरंग-प्रकाशिकी',
+    descriptionHi: 'तरंगाग्र, हाइगेंस का सिद्धांत, प्रकाश का व्यतिकरण, यंग का द्वि-स्लिट प्रयोग एवं फ्रिंज चौड़ाई, विवर्तन, केंद्रीय उच्चिष्ठ की चौड़ाई।',
+    weightageHi: 'इकाई VI: अध्याय 8 एवं 9 के साथ कुल 18 अंक',
+  },
+  'Dual Nature of Radiation and Matter': {
+    nameHi: 'विकिरण तथा द्रव्य की द्वैत प्रकृति',
+    descriptionHi: 'प्रकाश-विद्युत प्रभाव, हर्ट्ज़ एवं लेनार्ड के प्रेक्षण, आइंस्टीन का प्रकाश-विद्युत समीकरण, दे-ब्रॉग्ली संबंध एवं द्रव्य तरंगें।',
+    weightageHi: 'इकाई VII (अध्याय 11) + इकाई VIII (अध्याय 12 व 13): 12 अंक',
+  },
+  'Atoms': {
+    nameHi: 'परमाणु',
+    descriptionHi: 'अल्फ़ा-कण प्रकीर्णन, रदरफोर्ड मॉडल, बोहर का हाइड्रोजन परमाणु मॉडल (त्रिज्या, वेग, ऊर्जा स्तर), हाइड्रोजन रेखा स्पेक्ट्रम।',
+    weightageHi: 'इकाई VIII: अध्याय 11 एवं 13 के साथ कुल 12 अंक',
+  },
+  'Nuclei': {
+    nameHi: 'नाभिक',
+    descriptionHi: 'नाभिक का संघटन एवं आकार, नाभिकीय बल, द्रव्यमान-ऊर्जा संबंध, द्रव्यमान क्षति, प्रति न्यूक्लिऑन बंधन ऊर्जा, नाभिकीय विखंडन एवं संलयन।',
+    weightageHi: 'इकाई VIII: अध्याय 11 एवं 12 के साथ कुल 12 अंक',
+  },
+  'Semiconductor Electronics: Materials, Devices and Simple Circuits': {
+    nameHi: 'अर्धचालक इलेक्ट्रॉनिकी: पदार्थ, युक्तियां तथा सरल परिपथ',
+    descriptionHi: 'ऊर्जा बैंड, निज एवं अपद्रव्यी अर्धचालक (p एवं n प्रकार), p-n संधि डायोड (अग्र एवं पश्च बायस अभिलाक्षणिक), दिष्टकारी के रूप में डायोड।',
+    weightageHi: 'इकाई IX: 7 अंक (स्वतंत्र इकाई)',
+  },
+
+  // Chemistry (10 Chapters)
+  'Solutions': {
+    nameHi: 'विलयन',
+    descriptionHi: 'विलयनों के प्रकार, सांद्रता इकाइयां, विलेयता, हेनरी का नियम, राउल्ट का नियम, आदर्श एवं अनादर्श विलयन, अणुसंख्य गुणधर्म, असामान्य मोलर द्रव्यमान।',
+    weightageHi: 'इकाई 1: 7 अंक (भौतिक रसायन)',
+  },
+  'Electrochemistry': {
+    nameHi: 'वैद्युतरसायन',
+    descriptionHi: 'गैल्वेनी सेल, नेर्नस्ट समीकरण, विद्युत अपघटनी विलयनों की चालकता, कोलराउश का नियम, विद्युत अपघटन, बैटरी, ईंधन सेल, संक्षारण।',
+    weightageHi: 'इकाई 2: 9 अंक (उच्चतम अंक भार)',
+  },
+  'Chemical Kinetics': {
+    nameHi: 'रासायनिक बलगतिकी',
+    descriptionHi: 'अभिक्रिया का वेग, वेग को प्रभावित करने वाले कारक, शून्य एवं प्रथम कोटि के समाकलित वेग समीकरण, संघट्ट सिद्धांत, आरेनियस समीकरण।',
+    weightageHi: 'इकाई 3: 7 अंक (भौतिक रसायन)',
+  },
+  'd -and f -Block Elements': {
+    nameHi: 'd एवं f ब्लॉक के तत्व',
+    descriptionHi: 'इलेक्ट्रॉनिक विन्यास, संक्रमण तत्वों के सामान्य गुणधर्म, महत्वपूर्ण यौगिक (KMnO₄, K₂Cr₂O₇), लैन्थेनॉइड एवं ऐक्टिनॉइड आकुंचन।',
+    weightageHi: 'इकाई 4: 7 अंक (अकार्बनिक रसायन)',
+  },
+  'Coordination Compounds': {
+    nameHi: 'उपसहसंयोजन यौगिक',
+    descriptionHi: 'वर्नर का सिद्धांत, आईयूपीएसी नामकरण, समावयवता, संयोजकता आबंध सिद्धांत (VBT), क्रिस्टल क्षेत्र सिद्धांत (CFT), धातु कार्बोनिल में आबंधन।',
+    weightageHi: 'इकाई 5: 7 अंक (अकार्बनिक रसायन)',
+  },
+  'Haloalkanes and Haloarenes': {
+    nameHi: 'हैलोऐल्केन तथा हैलोऐरीन',
+    descriptionHi: 'वर्गीकरण, नामकरण, C-X आबंध की प्रकृति, विरचन की विधियां, भौतिक एवं रासायनिक गुणधर्म, SN1 एवं SN2 क्रियाविधि, पॉलीहैलोजन यौगिक।',
+    weightageHi: 'इकाई 6: 6 अंक (कार्बनिक रसायन)',
+  },
+  'Alcohols, Phenols and Ethers': {
+    nameHi: 'ऐल्कोहॉल, फ़ीनॉल एवं ईथर',
+    descriptionHi: 'वर्गीकरण, नामकरण, विरचन की विधियां, अम्लीय प्रकृति, कोल्बे अभिक्रिया, राइमर-टीमन अभिक्रिया, विलियमसन ईथर संश्लेषण।',
+    weightageHi: 'इकाई 7: 6 अंक (कार्बनिक रसायन)',
+  },
+  'Aldehydes, Ketones and Carboxylic Acids': {
+    nameHi: 'ऐल्डिहाइड, कीटोन एवं कार्बोक्सिलिक अम्ल',
+    descriptionHi: 'कार्बोनिल समूह, नाभिकरागी योगज अभिक्रियाएं, ऐल्डोल संघनन, कैनिजारो अभिक्रिया, कार्बोक्सिलिक अम्लों की अम्लता, HVZ अभिक्रिया।',
+    weightageHi: 'इकाई 8: 8 अंक (उच्चतम कार्बनिक अंक भार)',
+  },
+  'Amines': {
+    nameHi: 'ऐमीन',
+    descriptionHi: 'संरचना, वर्गीकरण, नामकरण, विरचन की विधियां, क्षारकीय सामर्थ्य, हिंसबर्ग परीक्षण, डाइऐज़ोनियम लवण एवं एरोमैटिक संश्लेषण में महत्व।',
+    weightageHi: 'इकाई 9: 6 अंक (कार्बनिक रसायन)',
+  },
+  'Biomolecules': {
+    nameHi: 'जैव-अणु',
+    descriptionHi: 'कार्बोहाइड्रेट (ग्लूकोज, फ्रक्टोज), प्रोटीन (अमीनो अम्ल, पेप्टाइड आबंध, विकृतीकरण), एंजाइम, विटामिन, न्यूक्लिक अम्ल (DNA/RNA), हार्मोन।',
+    weightageHi: 'इकाई 10: 7 अंक (कार्बनिक रसायन)',
+  },
+
+  // Mathematics (13 Chapters)
+  'Relations and Functions': {
+    nameHi: 'संबंध एवं फलन',
+    descriptionHi: 'संबंधों के प्रकार: स्वतुल्य, सममित, संक्रामक तथा तुल्यता संबंध। एकैकी तथा आच्छादक फलन।',
+    weightageHi: 'इकाई I (अध्याय 1 व 2): 08 अंक',
+  },
+  'Inverse Trigonometric Functions': {
+    nameHi: 'प्रतिलोम त्रिकोणमितीय फलन',
+    descriptionHi: 'परिभाषा, परिसर, प्रांत, मुख्य मान शाखाएं, प्रतिलोम त्रिकोणमितीय फलनों के आलेख एवं गुणधर्म।',
+    weightageHi: 'इकाई I (अध्याय 1 व 2): 08 अंक',
+  },
+  'Matrices': {
+    nameHi: 'आव्यूह',
+    descriptionHi: 'संकल्पना, संकेतन, कोटि, आव्यूहों के प्रकार, आव्यूह संक्रियाएं, गुणन की अक्रमविनिमेयता, व्युत्क्रमणीय आव्यूह।',
+    weightageHi: 'इकाई II (अध्याय 3 व 4): 10 अंक',
+  },
+  'Determinants': {
+    nameHi: 'सारणिक',
+    descriptionHi: 'वर्ग आव्यूह का सारणिक (3x3 तक), उपसारणिक, सहखंड, त्रिभुज का क्षेत्रफल, सहखंडज तथा व्युत्क्रम आव्यूह, आव्यूह विधि द्वारा रैखिक समीकरण निकाय का हल।',
+    weightageHi: 'इकाई II (अध्याय 3 व 4): 10 अंक',
+  },
+  'Continuity and Differentiability': {
+    nameHi: 'सांतत्य तथा अवकलनीयता',
+    descriptionHi: 'सांतत्य, श्रृंखला नियम, प्रतिलोम त्रिकोणमितीय फलनों का अवकलन, अस्पष्ट फलन, चरघातांकी व लघुगणकीय अवकलन, द्वितीय कोटि के अवकलज।',
+    weightageHi: 'इकाई III (अध्याय 5 से 9): 35 अंक (कलन)',
+  },
+  'Applications of Derivatives': {
+    nameHi: 'अवकलज के अनुप्रयोग',
+    descriptionHi: 'राशियों के परिवर्तन की दर, वर्धमान तथा ह्रासमान फलन, उच्चतम तथा निम्नतम (प्रथम व द्वितीय अवकलज परीक्षण), व्यावहारिक समस्याएं।',
+    weightageHi: 'इकाई III: कलन (35 अंक का भाग)',
+  },
+  'Integrals': {
+    nameHi: 'समाकलन',
+    descriptionHi: 'प्रतिस्थापन द्वारा समाकलन, आंशिक भिन्नों द्वारा समाकलन, खंडशः समाकलन, कलन का आधारभूत प्रमेय, निश्चित समाकलनों के गुणधर्म।',
+    weightageHi: 'इकाई III: कलन (35 अंक का भाग)',
+  },
+  'Applications of Integrals': {
+    nameHi: 'समाकलनों के अनुप्रयोग',
+    descriptionHi: 'साधारण वक्रों के अंतर्गत क्षेत्रफल, विशेषकर रेखाओं, वृत्तों, परवलयों तथा दीर्घवृत्तों के मानक रूपों का क्षेत्रफल निर्धारण।',
+    weightageHi: 'इकाई III: कलन (35 अंक का भाग)',
+  },
+  'Differential Equations': {
+    nameHi: 'अवकल समीकरण',
+    descriptionHi: 'कोटि एवं घात, व्यापक एवं विशिष्ट हल, चरों के पृथक्करण विधि द्वारा हल, समघातीय अवकल समीकरण, रैखिक अवकल समीकरण dy/dx + py = q का हल।',
+    weightageHi: 'इकाई III: कलन (35 अंक का भाग)',
+  },
+  'Vectors': {
+    nameHi: 'सदिश बीजगणित',
+    descriptionHi: 'सदिश एवं अदिश, परिमाण व दिशा, दिक्-कोसाइन व दिक्-अनुपात, स्थिति सदिश, योग व अदिश गुणन, अदिश (डॉट) तथा सदिश (क्रॉस) गुणनफल।',
+    weightageHi: 'इकाई IV (अध्याय 10 व 11): 14 अंक',
+  },
+  'Three-Dimensional Geometry': {
+    nameHi: 'त्रिविमीय ज्यामिति',
+    descriptionHi: 'दो बिंदुओं को मिलाने वाली रेखा के दिक्-कोसाइन व दिक्-अनुपात, रेखा का कार्तीय तथा सदिश समीकरण, विषमतलीय रेखाएं, रेखाओं के मध्य न्यूनतम दूरी।',
+    weightageHi: 'इकाई IV (अध्याय 10 व 11): 14 अंक',
+  },
+  'Linear Programming': {
+    nameHi: 'रैखिक प्रोग्रामन',
+    descriptionHi: 'व्यवरोध, उद्देश्य फलन, आलेखीय विधि द्वारा दो चरों में हल, सुसंगत एवं असुसंगत क्षेत्र, इष्टतम सुसंगत हल।',
+    weightageHi: 'इकाई V: 05 अंक',
+  },
+  'Probability': {
+    nameHi: 'प्रायिकता',
+    descriptionHi: 'सप्रतिबंध प्रायिकता, प्रायिकता का गुणन नियम, स्वतंत्र घटनाएं, संपूर्ण प्रायिकता प्रमेय, बेज़-प्रमेय (Bayes’ Theorem) एवं समस्याएं।',
+    weightageHi: 'इकाई VI: 08 अंक',
+  },
+};
+
+// Curated Hindi fallback questions strictly aligned with CBSE Class 12 NCERT curriculum
+export const CURATED_HINDI_FALLBACK_QUESTIONS: Record<Subject, Question[]> = {
+  Physics: [
+    {
+      id: 'fb-hi-phy-1',
+      question: 'एक समान विद्युत क्षेत्र E में विद्युत द्विध्रुव आघूर्ण p वाला द्विध्रुव क्षेत्र की दिशा से θ कोण पर स्थित है। द्विध्रुव में संचित स्थितिज ऊर्जा U का मान क्या है?',
+      options: ['U = pE (1 + cos θ)', 'U = -p · E = -pE cos θ', 'U = p × E = pE sin θ', 'U = -pE sin θ'],
+      correctIndex: 1,
+      conciseExplanation: 'एकसमान विद्युत क्षेत्र में द्विध्रुव की स्थितिज ऊर्जा U = -p · E = -pE cos θ द्वारा दी जाती है।',
+      detailedSolution: 'चरण 1: बलाघूर्ण τ = pE sin θ के विरुद्ध द्विध्रुव को मानक कोण 90° से θ कोण तक घुमाने में किया गया कार्य:\nचरण 2: W = ∫[90° से θ] (pE sin θ) dθ = -pE [cos θ - cos 90°] = -pE cos θ.\nचरण 3: अतः स्थितिज ऊर्जा U = -p · E = -pE cos θ प्राप्त होती है।',
+      subject: 'Physics',
+      chapter: 'Electrostatic Potential and Capacitance',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Physics Ch 2: स्थिरवैद्युत विभव तथा धारिता)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-phy-2',
+      question: 'श्रेणी LCR प्रत्यावर्ती धारा परिपथ में विद्युत अनुनाद (electrical resonance) की स्थिति में शक्ति गुणांक (cos φ) का मान क्या होता है?',
+      options: ['1.0 (इकाई)', '0', '0.5', 'अनंत'],
+      correctIndex: 0,
+      conciseExplanation: 'अनुनाद पर प्रेरकीय प्रतिघात धारितीय प्रतिघात के बराबर होता है (X_L = X_C), जिससे परिपथ पूर्णतः प्रतिरोधी हो जाता है और cos φ = 1.0 होता है।',
+      detailedSolution: 'चरण 1: परिपथ की कुल प्रतिबाधा Z = √[R² + (X_L - X_C)²] होती है।\nचरण 2: अनुनाद पर X_L = X_C होने से Z = R हो जाता है।\nचरण 3: वोल्टेज और धारा के बीच कलांतर φ = 0° होता है।\nचरण 4: अतः शक्ति गुणांक cos φ = R/Z = R/R = 1.0 (इकाई) होता है।',
+      subject: 'Physics',
+      chapter: 'Alternating Current',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Physics Ch 7: प्रत्यावर्ती धारा)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-phy-3',
+      question: 'यंग के द्वि-स्लिट प्रयोग में यदि पूरे उपकरण को अपवर्तनांक μ = 1.33 वाले द्रव में डुबो दिया जाए, तो फ्रिंज चौड़ाई β किस प्रकार परिवर्तित होगी?',
+      options: ['यह 1.33 गुना बढ़ जाएगी', 'यह अपरिवर्तित रहेगी', 'यह शून्य हो जाएगी', 'यह 1.33 के गुणक से घट जाएगी'],
+      correctIndex: 3,
+      conciseExplanation: 'फ्रिंज चौड़ाई β = λD/d होती है। अपवर्तनांक μ वाले माध्यम में तरंगदैर्घ्य λ’ = λ/μ हो जाती है, अतः फ्रिंज चौड़ाई μ के गुणक से घट जाती है।',
+      detailedSolution: 'चरण 1: वायु में फ्रिंज चौड़ाई β = (λ D) / d है।\nचरण 2: अपवर्तनांक μ वाले द्रव में प्रकाश की चाल v = c/μ होती है, जिससे नई तरंगदैर्घ्य λ’ = λ/1.33 हो जाती है।\nचरण 3: नई फ्रिंज चौड़ाई β’ = (λ’ D) / d = β / 1.33 हो जाएगी, अर्थात 1.33 गुना घट जाएगी।',
+      subject: 'Physics',
+      chapter: 'Wave Optics',
+      difficulty: 'Medium',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Physics Ch 10: तरंग-प्रकाशिकी)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-phy-4',
+      question: 'विभवांतर V वोल्ट द्वारा विराम से त्वरित एक इलेक्ट्रॉन से संबद्ध दे-ब्रॉग्ली तरंगदैर्घ्य (de Broglie wavelength) का लगभग मान क्या है?',
+      options: ['λ ≈ 12.27 √V nm', 'λ ≈ 1.227 / √V nm', 'λ ≈ 0.1227 / V nm', 'λ ≈ 1.227 V nm'],
+      correctIndex: 1,
+      conciseExplanation: 'इलेक्ट्रॉन के लिए दे-ब्रॉग्ली तरंगदैर्घ्य सूत्र λ = h / √(2m eV) ≈ 1.227 / √V nm होता है।',
+      detailedSolution: 'चरण 1: V वोल्ट विभवांतर से त्वरित इलेक्ट्रॉन की गतिज ऊर्जा K = e V होती है।\nचरण 2: संवेग p = √(2 m_e e V) प्राप्त होता है।\nचरण 3: दे-ब्रॉग्ली संबंध अनुसार λ = h/p = h / √(2 m_e e V) होता है।\nचरण 4: स्थिरांकों के मान रखने पर λ = 1.227 / √V nm प्राप्त होता है।',
+      subject: 'Physics',
+      chapter: 'Dual Nature of Radiation and Matter',
+      difficulty: 'Hard',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Physics Ch 11: विकिरण तथा द्रव्य की द्वैत प्रकृति)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-phy-5',
+      question: 'एकसमान आवेशित पतले गोलीय कोश (त्रिज्या R) के केंद्र से r दूरी पर (जहाँ r < R) आंतरिक बिंदु पर विद्युत क्षेत्र की तीव्रता क्या होती है?',
+      options: ['शून्य', 'Q / (4πε₀ r²)', 'Q / (4πε₀ R²)', 'Q r / (4πε₀ R³)'],
+      correctIndex: 0,
+      conciseExplanation: 'गाउस के नियमानुसार, गोलीय कोश के भीतर किसी भी गाउसीय पृष्ठ द्वारा परिबद्ध कुल आवेश शून्य होता है, अतः आंतरिक विद्युत क्षेत्र E = 0 होता है।',
+      detailedSolution: 'चरण 1: त्रिज्या r < R वाला संकेंद्रीय गाउसीय गोलाकार पृष्ठ लें।\nचरण 2: गाउस का नियम: ∮ E · dA = q_enclosed / ε₀।\nचरण 3: चूँकि सारा आवेश Q केवल कोश की बाहरी सतह पर स्थित है, q_enclosed = 0।\nचरण 4: अतः E · (4πr²) = 0 ⇒ E = 0।',
+      subject: 'Physics',
+      chapter: 'Electric Charges and Fields',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Physics Ch 1: वैद्युत आवेश तथा क्षेत्र)',
+      language: 'hi',
+    },
+  ],
+  Chemistry: [
+    {
+      id: 'fb-hi-chem-1',
+      question: 'निम्नलिखित में से सांद्रता व्यक्त करने की कौन-सी इकाई तापमान में परिवर्तन से स्वतंत्र (तापमान पर निर्भर नहीं) रहती है?',
+      options: ['मोलरता (Molarity)', 'मोललता (Molality)', 'नॉर्मलता (Normality)', 'द्रव्यमान/आयतन प्रतिशत'],
+      correctIndex: 1,
+      conciseExplanation: 'मोललता में विलायक का द्रव्यमान प्रयुक्त होता है (मोल प्रति किग्रा विलायक), जो ताप पर निर्भर नहीं करता, जबकि आयतन ताप बदलने पर परिवर्तित होता है।',
+      detailedSolution: 'चरण 1: मोललता (m) = (विलेय के मोल) / (विलायक का द्रव्यमान किग्रा में)।\nचरण 2: द्रव्यमान तापमान परिवर्तन से अप्रभावित रहता है।\nचरण 3: मोलरता और नॉर्मलता आयतन पर आधारित हैं जो ताप बढ़ने पर प्रसार के कारण बदलते हैं।\nचरण 4: अतः मोललता ताप से स्वतंत्र है।',
+      subject: 'Chemistry',
+      chapter: 'Solutions',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Chemistry Ch 1: विलयन)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-chem-2',
+      question: 'अम्लीय माध्यम में पोटेशियम परमैंगनेट (KMnO₄) एक प्रबल ऑक्सीकारक के रूप में कार्य करता है। इस प्रक्रिया में मैंगनीज की ऑक्सीकरण अवस्था किसमें परिवर्तित होती है?',
+      options: ['+7 से +2', '+7 से +4', '+7 से +6', '+7 से 0'],
+      correctIndex: 0,
+      conciseExplanation: 'अम्लीय माध्यम में MnO₄⁻ आयन 5 इलेक्ट्रॉनों का ग्रहण कर Mn²⁺ आयन में अपचयित होता है (+7 से +2)।',
+      detailedSolution: 'चरण 1: अम्लीय माध्यम में अर्द्ध-अभिक्रिया: MnO₄⁻ + 8H⁺ + 5e⁻ → Mn²⁺ + 4H₂O।\nचरण 2: MnO₄⁻ में Mn की ऑक्सीकरण संख्या +7 है।\nचरण 3: उत्पाद Mn²⁺ में ऑक्सीकरण संख्या +2 है।\nचरण 4: अतः परिवर्तन +7 से +2 है।',
+      subject: 'Chemistry',
+      chapter: 'd -and f -Block Elements',
+      difficulty: 'Medium',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Chemistry Ch 4: d एवं f ब्लॉक के तत्व)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-chem-3',
+      question: 'प्रथम कोटि की अभिक्रिया के लिए यदि वेग स्थिरांक k = 2.303 × 10⁻² s⁻¹ हो, तो अभिक्रिया की अर्द्ध-आयु (t_1/2) का मान क्या होगा?',
+      options: ['10 सेकंड', '69.3 सेकंड', '30.1 सेकंड', '100 सेकंड'],
+      correctIndex: 2,
+      conciseExplanation: 'प्रथम कोटि अभिक्रिया हेतु t_1/2 = 0.693 / k = 0.693 / (2.303 × 10⁻²) ≈ 30.1 सेकंड।',
+      detailedSolution: 'चरण 1: प्रथम कोटि की अर्द्ध-आयु का सूत्र: t_1/2 = ln(2) / k = 0.693 / k।\nचरण 2: दिया गया k = 2.303 × 10⁻² s⁻¹।\nचरण 3: t_1/2 = 0.693 / (0.02303) = 30.09 ≈ 30.1 s।',
+      subject: 'Chemistry',
+      chapter: 'Chemical Kinetics',
+      difficulty: 'Medium',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Chemistry Ch 3: रासायनिक बलगतिकी)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-chem-4',
+      question: 'प्राथमिक, द्वितीयक एवं तृतीयक ऐमीनों में विभेद करने के लिए प्रयुक्त हिंसबर्ग अभिकर्मक (Hinsberg reagent) का रासायनिक नाम क्या है?',
+      options: ['बेंजीन सल्फोनिल क्लोराइड (C₆H₅SO₂Cl)', 'बेंजीन डाइऐज़ोनियम क्लोराइड', 'ऐसीटिल क्लोराइड', 'थायोनिल क्लोराइड'],
+      correctIndex: 0,
+      conciseExplanation: 'बेंजीन सल्फोनिल क्लोराइड (C₆H₅SO₂Cl) को हिंसबर्ग अभिकर्मक कहा जाता है, जो 1°, 2° और 3° ऐमीनों के साथ भिन्न अभिक्रियाएं देता है।',
+      detailedSolution: 'चरण 1: हिंसबर्ग अभिकर्मक बेंजीन सल्फोनिल क्लोराइड (C₆H₅SO₂Cl) है।\nचरण 2: 1° ऐमीन N-एल्किलबेंजीनसल्फोनेमाइड बनाता है जो क्षार (KOH) में विलेय है।\nचरण 3: 2° ऐमीन ऐसा उत्पाद बनाता है जो क्षार में अविलेय है, तथा 3° ऐमीन अभिक्रिया नहीं करता।',
+      subject: 'Chemistry',
+      chapter: 'Amines',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Chemistry Ch 9: ऐमीन)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-chem-5',
+      question: 'डीएनए (DNA) अणु में उपस्थित कौन-सा नाइट्रोजनयुक्त क्षार आरएनए (RNA) में अनुपस्थित होता है और इसके स्थान पर यूरेसिल उपस्थित होता है?',
+      options: ['ऐडिनीन', 'ग्वानीन', 'थाइमीन (Thymine)', 'साइटोसीन'],
+      correctIndex: 2,
+      conciseExplanation: 'डीएनए में थाइमीन (T) पाया जाता है, जबकि आरएनए में थाइमीन के स्थान पर यूरेसिल (U) उपस्थित होता है।',
+      detailedSolution: 'चरण 1: डीएनए में चार क्षार होते हैं: ऐडीनीन (A), ग्वानीन (G), साइटोसीन (C), और थाइमीन (T)।\nचरण 2: आरएनए में क्षार होते हैं: ऐडीनीन (A), ग्वानीन (G), साइटोसीन (C), और यूरेसिल (U)।\nचरण 3: अतः थाइमीन केवल डीएनए में पाया जाता है।',
+      subject: 'Chemistry',
+      chapter: 'Biomolecules',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Chemistry Ch 10: जैव-अणु)',
+      language: 'hi',
+    },
+  ],
+  Mathematics: [
+    {
+      id: 'fb-hi-math-1',
+      question: 'यदि आव्यूह A एक 3 × 3 कोटि का वर्ग आव्यूह है और |A| = 4 है, तो इसके सहखंडज आव्यूह के सारणिक |adj(A)| का मान क्या होगा?',
+      options: ['4', '12', '16', '64'],
+      correctIndex: 2,
+      conciseExplanation: 'कोटि n के वर्ग आव्यूह के लिए |adj(A)| = |A|^(n-1) होता है। यहाँ n = 3 और |A| = 4 होने से 4^(3-1) = 4² = 16 होगा।',
+      detailedSolution: 'चरण 1: मानक आव्यूह गुणधर्म: |adj(A)| = |A|^(n - 1)।\nचरण 2: यहाँ आव्यूह की कोटि n = 3 तथा सारणिक मान |A| = 4 है।\nचरण 3: |adj(A)| = 4^(3 - 1) = 4² = 16।',
+      subject: 'Mathematics',
+      chapter: 'Determinants',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Mathematics Ch 4: सारणिक)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-math-2',
+      question: 'फलन f(x) = sin(x) + cos(x) का अंतराल [0, π/2] में अधिकतम मान क्या है?',
+      options: ['1', '√2', '2', '1/√2'],
+      correctIndex: 1,
+      conciseExplanation: 'x = π/4 पर f’(x) = cos(x) - sin(x) = 0 होता है, जहाँ f(π/4) = 1/√2 + 1/√2 = 2/√2 = √2 अधिकतम मान है।',
+      detailedSolution: 'चरण 1: f(x) = sin x + cos x का अवकलन करने पर f’(x) = cos x - sin x।\nचरण 2: क्रांतिक बिंदु हेतु cos x - sin x = 0 ⇒ tan x = 1 ⇒ x = π/4।\nचरण 3: द्वितीय अवकलज f’’(x) = -sin x - cos x < 0, अतः π/4 पर उच्चतम मान प्राप्त होता है।\nचरण 4: f(π/4) = sin(π/4) + cos(π/4) = 1/√2 + 1/√2 = 2/√2 = √2।',
+      subject: 'Mathematics',
+      chapter: 'Applications of Derivatives',
+      difficulty: 'Medium',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Mathematics Ch 6: अवकलज के अनुप्रयोग)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-math-3',
+      question: 'समाकलन ∫ [e^x (1 + x) / cos²(x e^x)] dx का मान क्या है?',
+      options: ['tan(x e^x) + C', 'cot(x e^x) + C', '-tan(x e^x) + C', 'sec(x e^x) + C'],
+      correctIndex: 0,
+      conciseExplanation: 'प्रतिस्थापन t = x e^x करने पर dt = (x e^x + e^x) dx = e^x(1 + x) dx प्राप्त होता है। समाकलन ∫ sec²(t) dt = tan(t) + C = tan(x e^x) + C है।',
+      detailedSolution: 'चरण 1: माना t = x e^x।\nचरण 2: दोनों पक्षों का अवकलन: dt = [1·e^x + x·e^x] dx = e^x (1 + x) dx।\nचरण 3: समाकलन परिवर्तित होकर ∫ [1 / cos²(t)] dt = ∫ sec²(t) dt बन जाता है।\nचरण 4: ∫ sec²(t) dt = tan(t) + C = tan(x e^x) + C।',
+      subject: 'Mathematics',
+      chapter: 'Integrals',
+      difficulty: 'Medium',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Mathematics Ch 7: समाकलन)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-math-4',
+      question: 'यदि दो परस्पर लंबवत सदिशों a और b के लिए |a| = 3 और |b| = 4 हो, तो |a + b| का मान क्या होगा?',
+      options: ['7', '1', '5', '12'],
+      correctIndex: 2,
+      conciseExplanation: 'परस्पर लंबवत सदिशों के लिए a · b = 0 होता है, अतः |a + b| = √( |a|² + |b|² ) = √(3² + 4²) = √25 = 5।',
+      detailedSolution: 'चरण 1: |a + b|² = |a|² + |b|² + 2(a · b)।\nचरण 2: चूँकि a ⊥ b, अतः a · b = 0।\nचरण 3: |a + b|² = 3² + 4² + 0 = 9 + 16 = 25।\nचरण 4: |a + b| = √25 = 5।',
+      subject: 'Mathematics',
+      chapter: 'Vectors',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Mathematics Ch 10: सदिश बीजगणित)',
+      language: 'hi',
+    },
+    {
+      id: 'fb-hi-math-5',
+      question: 'प्रतिलोम त्रिकोणमितीय फलन sin⁻¹(-1/2) का मुख्य मान (principal value) क्या है?',
+      options: ['π/6', '-π/6', '5π/6', '-π/3'],
+      correctIndex: 1,
+      conciseExplanation: 'sin⁻¹(x) की मुख्य मान शाखा [-π/2, π/2] होती है। चूँकि sin(-π/6) = -1/2 है, अतः मुख्य मान -π/6 है।',
+      detailedSolution: 'चरण 1: sin⁻¹ फलन की मुख्य मान शाखा [-π/2, π/2] है।\nचरण 2: माना θ = sin⁻¹(-1/2) ⇒ sin θ = -1/2।\nचरण 3: sin(π/6) = 1/2, अतः sin(-π/6) = -sin(π/6) = -1/2।\nचरण 4: चूँकि -π/6 ∈ [-π/2, π/2], अतः मुख्य मान -π/6 है।',
+      subject: 'Mathematics',
+      chapter: 'Inverse Trigonometric Functions',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Mathematics Ch 2: प्रतिलोम त्रिकोणमितीय फलन)',
+      language: 'hi',
+    },
+  ],
+};

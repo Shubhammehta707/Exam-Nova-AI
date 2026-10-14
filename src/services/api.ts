@@ -27,6 +27,7 @@ export async function fetchQuizQuestions(config: QuizConfig): Promise<QuizGenera
     difficulty: config.difficulty,
     count: config.questionCount,
     mode: config.mode,
+    language: config.language || 'en',
   };
 
   const endpoints = ['/api/generate-quiz', '/.netlify/functions/generate-quiz'];
@@ -140,6 +141,7 @@ export async function fetchQuizQuestions(config: QuizConfig): Promise<QuizGenera
           sourceNote:
             q.sourceNote ||
             `AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII ${config.subject})`,
+          language: q.language || config.language || 'en',
         });
       }
     }

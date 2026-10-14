@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from '@google/genai';
-import { Question, Subject, Difficulty } from '../types/quiz';
+import { Question, Subject, Difficulty, Language } from '../types/quiz';
 
 export interface QuizGenerationRequest {
   subject: Subject | string;
@@ -7,6 +7,7 @@ export interface QuizGenerationRequest {
   difficulty?: Difficulty | string;
   count?: number;
   mode?: string;
+  language?: Language;
 }
 
 export interface QuizGenerationResponse {
@@ -18,6 +19,7 @@ export interface QuizGenerationResponse {
     difficulty: string;
     count: number;
     model: string;
+    language: Language;
   };
 }
 
@@ -44,6 +46,8 @@ export async function generateQuizWithGemini(
       ? String(params.chapter).trim()
       : `Comprehensive Practice (${subject} Syllabus)`;
 
+  const language: Language = params.language === 'hi' ? 'hi' : 'en';
+
   const aiClient = new GoogleGenAI({
     apiKey: apiKey.trim(),
     httpOptions: {
@@ -53,8 +57,21 @@ export async function generateQuizWithGemini(
     },
   });
 
+  const languageInstruction =
+    language === 'hi'
+      ? `CRITICAL LANGUAGE REQUIREMENT (HINDI):
+The student has selected HINDI (हिन्दी) medium.
+1. All question statements, 4 answer options, conciseExplanation, and detailedSolution MUST be written in natural, fluent, grammatically correct Hindi suitable for CBSE Class 12 examinations.
+2. Use accurate NCERT Class 12 Hindi educational terminology (e.g. विद्युत क्षेत्र, संधारित्र, अपवाह वेग, नाभिकरागी, समाकलन, अवकलज, आव्यूह, सारणिक, इत्यादि).
+3. Strictly preserve standard scientific and mathematical notation, formulas, equations (e.g., E = mc², F = q(v × B), ∫ sin x dx), chemical formulas (e.g., KMnO₄, CH₃COOH), standard SI units (e.g., m/s, J, N, Ω, μF), and numbers.
+4. Keep the question phrasing natural, dignified, and academically rigorous for board exams. Avoid unnecessary mixing of English slang.`
+      : `CRITICAL LANGUAGE REQUIREMENT (ENGLISH):
+The student has selected English medium. Generate all questions, options, conciseExplanation, and detailedSolution in clear, fluent, academic English.`;
+
   const systemInstruction = `You are a premier senior teacher and curriculum specialist for Indian CBSE Class 12 Board Examinations, strictly adhering to the official CBSE 2026–27 syllabus (Physics Subject Code 042, Chemistry Subject Code 043, Mathematics Subject Code 041) and prescribed NCERT Class XII textbooks.
 Your mission is to generate original, fresh, board-standard practice multiple-choice questions (MCQs) for Indian Class 12 students.
+
+${languageInstruction}
 
 CRITICAL RULES:
 1. Strict CBSE 2026–27 & NCERT Alignment:
@@ -73,7 +90,23 @@ CRITICAL RULES:
 6. Attribution & Transparency:
    - Set sourceNote strictly as: "AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII ${subject} Ch: ${targetChapter})".`;
 
-  const userPrompt = `Generate exactly ${questionCount} fresh, non-repetitive multiple-choice questions for CBSE Class 12.
+  const userPrompt =
+    language === 'hi'
+      ? `सीबीएसई कक्षा 12 के लिए ठीक ${questionCount} नए, मौलिक बहुविकल्पीय प्रश्न (MCQ) हिन्दी में बनाएं।
+विषय: ${subject}
+अध्याय / टॉपिक: ${targetChapter}
+कठिनाई स्तर: ${selectedDifficulty}
+
+आवश्यकताएं:
+- प्रत्येक प्रश्न के लिए ठीक 4 विकल्प (options) हिन्दी में।
+- "correctIndex" सही विकल्प से मेल खाता 0 से 3 के बीच एक पूर्णांक है।
+- "conciseExplanation" 1-2 वाक्यों में तुरंत मुख्य अवधारणा समझाता है।
+- "detailedSolution" चरण-दर-चरण विस्तृत हल, सूत्र और गणना प्रदान करता है।
+- "chapter" specifies "${targetChapter}".
+- "difficulty" specifies "${selectedDifficulty}".
+- "sourceNote" specifies "AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII ${subject}: ${targetChapter})".
+- सभी प्रश्न प्रामाणिक रूप से अध्याय "${targetChapter}" और सीबीएसई पाठ्यक्रम 2026-27 से संबंधित होने चाहिए।`
+      : `Generate exactly ${questionCount} fresh, non-repetitive multiple-choice questions for CBSE Class 12 in English.
 Subject: ${subject}
 Chapter/Topic: ${targetChapter}
 Difficulty Level: ${selectedDifficulty}
@@ -112,7 +145,7 @@ Requirements:
             properties: {
               questions: {
                 type: Type.ARRAY,
-                description: `List of exactly ${questionCount} NCERT-aligned questions`,
+                description: `List of exactly ${questionCount} NCERT-aligned questions in ${language === 'hi' ? 'Hindi' : 'English'}`,
                 items: {
                   type: Type.OBJECT,
                   properties: {
@@ -205,14 +238,20 @@ Requirements:
           question: q.question.trim(),
           options: q.options.map((opt: string) => opt.trim()) as [string, string, string, string],
           correctIndex: q.correctIndex,
-          conciseExplanation: q.conciseExplanation || 'Aligned with NCERT Class 12 curriculum.',
-          detailedSolution: q.detailedSolution || q.conciseExplanation || 'Step-by-step NCERT analysis.',
+          conciseExplanation:
+            q.conciseExplanation ||
+            (language === 'hi' ? 'कक्षा 12 एनसीईआरटी पाठ्यक्रम के अनुसार।' : 'Aligned with NCERT Class 12 curriculum.'),
+          detailedSolution:
+            q.detailedSolution ||
+            q.conciseExplanation ||
+            (language === 'hi' ? 'चरण-दर-चरण एनसीईआरटी हल।' : 'Step-by-step NCERT analysis.'),
           subject: subject as Subject,
           chapter: q.chapter || targetChapter,
           difficulty: (['Easy', 'Medium', 'Hard'].includes(q.difficulty) ? q.difficulty : selectedDifficulty) as Difficulty,
           sourceNote:
             q.sourceNote ||
             `AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII ${subject} Ch: ${targetChapter})`,
+          language,
         });
       }
     }
@@ -231,6 +270,7 @@ Requirements:
       difficulty: selectedDifficulty,
       count: validatedQuestions.slice(0, questionCount).length,
       model: usedModel,
+      language,
     },
   };
 }

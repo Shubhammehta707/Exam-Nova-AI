@@ -28,13 +28,14 @@ app.get('/api/health', (req, res) => {
 // Quiz generation endpoint
 app.post('/api/generate-quiz', async (req, res) => {
   try {
-    const { subject, chapter, difficulty, count, mode } = req.body;
+    const { subject, chapter, difficulty, count, mode, language } = req.body;
     const result = await generateQuizWithGemini({
       subject,
       chapter,
       difficulty,
       count,
       mode,
+      language,
     });
     return res.json(result);
   } catch (error: any) {

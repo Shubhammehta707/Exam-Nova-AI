@@ -46,7 +46,7 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
       }
     }
 
-    const { subject, chapter, difficulty, count, mode } = payload;
+    const { subject, chapter, difficulty, count, mode, language } = payload;
 
     const result = await generateQuizWithGemini({
       subject,
@@ -54,6 +54,7 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
       difficulty,
       count,
       mode,
+      language,
     });
 
     return {

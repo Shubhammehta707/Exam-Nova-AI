@@ -311,6 +311,263 @@ export const CBSE_MATHEMATICS_CHAPTERS: ChapterInfo[] = [
   },
 ];
 
+export const CBSE_ACCOUNTANCY_CHAPTERS: ChapterInfo[] = [
+  {
+    id: 'acc-1',
+    name: 'Accounting for Partnership: Basic Concepts',
+    subject: 'Accountancy',
+    description: 'Partnership deed, Profit and Loss Appropriation Account, partners capital accounts (fixed and fluctuating), interest on capital and drawings, past adjustments, guarantee of profits.',
+    weightageGuideline: 'Unit 1: Part A (Partnership Firms): 36 Marks Total',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus (Code 055)',
+  },
+  {
+    id: 'acc-2',
+    name: 'Reconstitution of a Partnership: Admission of a Partner',
+    subject: 'Accountancy',
+    description: 'Change in profit sharing ratio, sacrificing ratio, accounting treatment of goodwill (AS-26), revaluation of assets and reassessment of liabilities, treatment of accumulated reserves and profits.',
+    weightageGuideline: 'Unit 1: Part of 36 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'acc-3',
+    name: 'Reconstitution of a Partnership: Retirement/Death of a Partner',
+    subject: 'Accountancy',
+    description: 'Ascertaining gaining ratio, treatment of goodwill on retirement/death, revaluation account, settlement of retiring partner account, calculation of deceased partner share of profit till death.',
+    weightageGuideline: 'Unit 1: Part of 36 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'acc-4',
+    name: 'Dissolution of a Partnership Firm',
+    subject: 'Accountancy',
+    description: 'Meaning of dissolution, difference between firm dissolution and partnership dissolution, Realisation Account preparation, treatment of unrecorded assets and liabilities, partner loans.',
+    weightageGuideline: 'Unit 1: Part of 36 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'acc-5',
+    name: 'Accounting for Share Capital',
+    subject: 'Accountancy',
+    description: 'Share and share capital types, issue of shares at par and premium, over-subscription (pro-rata allotment), calls in arrears and advance, forfeiture of shares and reissue of forfeited shares.',
+    weightageGuideline: 'Unit 2: Accounting for Companies: 24 Marks Total',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'acc-6',
+    name: 'Issue and Redemption of Debentures',
+    subject: 'Accountancy',
+    description: 'Types of debentures, issue of debentures at par, premium and discount, issue of debentures as collateral security, writing off discount/loss on issue of debentures.',
+    weightageGuideline: 'Unit 2: Accounting for Companies (Part of 24 Marks)',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'acc-7',
+    name: 'Financial Statements of a Company',
+    subject: 'Accountancy',
+    description: 'Statement of Profit and Loss and Balance Sheet in prescribed format with major headings and sub-headings (Schedule III to Companies Act, 2013).',
+    weightageGuideline: 'Part B: Financial Statement Analysis: 20 Marks Total',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'acc-8',
+    name: 'Accounting Ratios',
+    subject: 'Accountancy',
+    description: 'Liquidity Ratios (Current, Quick), Solvency Ratios (Debt to Equity, Total Assets to Debt, Proprietary, Interest Coverage), Activity Ratios (Inventory, Trade Receivables, Trade Payables, Working Capital Turnover), Profitability Ratios (Gross Profit, Operating, Net Profit, Return on Investment).',
+    weightageGuideline: 'Part B: Financial Statement Analysis (Part of 20 Marks)',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'acc-9',
+    name: 'Cash Flow Statement',
+    subject: 'Accountancy',
+    description: 'Meaning, objectives, preparation of Cash Flow Statement as per AS 3 (Revised) using indirect method: Cash flows from Operating, Investing, and Financing activities.',
+    weightageGuideline: 'Part B: Financial Statement Analysis (8 Marks Standalone)',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+];
+
+export const CBSE_BUSINESS_STUDIES_CHAPTERS: ChapterInfo[] = [
+  {
+    id: 'bst-1',
+    name: 'Nature and Significance of Management',
+    subject: 'Business Studies',
+    description: 'Management concept, objectives, importance, management as Science, Art and Profession, levels of management, coordination as the essence of management.',
+    weightageGuideline: 'Part A: Principles & Functions of Management: 50 Marks Total',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus (Code 054)',
+  },
+  {
+    id: 'bst-2',
+    name: 'Principles of Management',
+    subject: 'Business Studies',
+    description: 'Fayol’s 14 principles of general management, Taylor’s scientific management principles and techniques (functional foremanship, motion, time, fatigue studies).',
+    weightageGuideline: 'Part A: Units 1-3: 16 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'bst-3',
+    name: 'Business Environment',
+    subject: 'Business Studies',
+    description: 'Concept, importance, dimensions of business environment (Economic, Social, Technological, Political, Legal), Economic environment in India and major economic policy changes.',
+    weightageGuideline: 'Part A: Units 1-3: 16 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'bst-4',
+    name: 'Planning',
+    subject: 'Business Studies',
+    description: 'Concept, importance, limitations, planning process, types of plans: single-use vs standing plans, objectives, strategy, policy, procedure, method, rule, budget.',
+    weightageGuideline: 'Part A: Units 4 & 5: 14 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'bst-5',
+    name: 'Organising',
+    subject: 'Business Studies',
+    description: 'Concept, importance, organizing process, structure of organization (functional vs divisional), formal and informal organization, delegation of authority, decentralization.',
+    weightageGuideline: 'Part A: Units 4 & 5: 14 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'bst-6',
+    name: 'Staffing',
+    subject: 'Business Studies',
+    description: 'Concept, importance, staffing as part of HRM, staffing process, recruitment (internal vs external sources), selection process, training and development.',
+    weightageGuideline: 'Part A: Units 6-8: 20 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'bst-7',
+    name: 'Directing',
+    subject: 'Business Studies',
+    description: 'Concept, importance, elements of directing: supervision, motivation (Maslow’s hierarchy, financial & non-financial incentives), leadership styles, communication barriers.',
+    weightageGuideline: 'Part A: Units 6-8: 20 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'bst-8',
+    name: 'Controlling',
+    subject: 'Business Studies',
+    description: 'Concept, importance, relationship between planning and controlling, steps in the controlling process (setting standards, measurement, deviation analysis, corrective action).',
+    weightageGuideline: 'Part A: Units 6-8: 20 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'bst-9',
+    name: 'Financial Management',
+    subject: 'Business Studies',
+    description: 'Meaning, role and objectives of financial management, financial decisions (investment, financing, dividend), financial planning, capital structure, working capital factors.',
+    weightageGuideline: 'Part B: Business Finance and Marketing: 30 Marks Total',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'bst-10',
+    name: 'Financial Markets',
+    subject: 'Business Studies',
+    description: 'Concept of financial markets, money market instruments (treasury bills, commercial paper, call money), capital market (primary vs secondary), stock exchange, SEBI objectives & functions.',
+    weightageGuideline: 'Part B: Units 9 & 10: 15 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'bst-11',
+    name: 'Marketing Management',
+    subject: 'Business Studies',
+    description: 'Marketing concepts and philosophies, marketing functions, marketing mix: 4 Ps (Product: branding, packaging, labelling; Price factors; Place: physical distribution; Promotion: advertising, sales promotion, PR, personal selling).',
+    weightageGuideline: 'Part B: Units 11 & 12: 15 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'bst-12',
+    name: 'Consumer Protection',
+    subject: 'Business Studies',
+    description: 'Importance of consumer protection, Consumer Protection Act 2019, consumer rights and responsibilities, consumer redressal agencies (District, State, National commissions).',
+    weightageGuideline: 'Part B: Units 11 & 12: 15 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+];
+
+export const CBSE_ECONOMICS_CHAPTERS: ChapterInfo[] = [
+  {
+    id: 'eco-1',
+    name: 'Circular Flow of Income & National Income Aggregates',
+    subject: 'Economics',
+    description: 'Circular flow of income (two-sector model), basic concepts: stock and flow, gross investment, depreciation, intermediate and final goods, domestic territory, aggregates (GDP, GNP, NDP, NNP at MP & FC).',
+    weightageGuideline: 'Part A: Introductory Macroeconomics (40 Marks) • Unit 1: 10 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus (Code 030)',
+  },
+  {
+    id: 'eco-2',
+    name: 'Measurement of National Income',
+    subject: 'Economics',
+    description: 'Methods of calculating National Income: Value Added method, Income method, and Expenditure method; Real and Nominal GDP; GDP and welfare.',
+    weightageGuideline: 'Part A: Unit 1: Part of 10 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'eco-3',
+    name: 'Money and Banking',
+    subject: 'Economics',
+    description: 'Money: meaning and supply of money (currency with public and demand deposits); Money creation by the commercial banking system; Central Bank (RBI) and its functions; monetary control instruments (CRR, SLR, Repo rate, Reverse Repo, Open Market Operations).',
+    weightageGuideline: 'Part A: Unit 2: 06 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'eco-4',
+    name: 'Determination of Income and Employment',
+    subject: 'Economics',
+    description: 'Aggregate demand and its components, Propensity to consume and save (APC, MPC, APS, MPS), short-run equilibrium output, investment multiplier and its mechanism, problems of deficient and excess demand; measures to correct them.',
+    weightageGuideline: 'Part A: Unit 3: 12 Marks (Highest Macro Weightage)',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'eco-5',
+    name: 'Government Budget and the Economy',
+    subject: 'Economics',
+    description: 'Government budget: meaning, objectives, and components; classification of receipts (revenue and capital); classification of expenditure (revenue and capital); measures of government deficit (revenue, fiscal, and primary deficits).',
+    weightageGuideline: 'Part A: Unit 4: 06 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'eco-6',
+    name: 'Balance of Payments and Foreign Exchange',
+    subject: 'Economics',
+    description: 'Balance of Payments account: meaning and components (Current Account and Capital Account, BoP surplus and deficit); Foreign exchange rate: fixed, flexible, and managed floating systems, determination in free market.',
+    weightageGuideline: 'Part A: Unit 5: 06 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'eco-7',
+    name: 'Development Experience (1947-90) & Economic Reforms (1991)',
+    subject: 'Economics',
+    description: 'State of Indian economy on eve of independence; common goals of Five Year Plans; agriculture, industry, and foreign trade policies (1950-1990); Economic reforms since 1991: Liberalisation, Privatisation, and Globalisation (LPG policies).',
+    weightageGuideline: 'Part B: Indian Economic Development (40 Marks) • Unit 6: 12 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'eco-8',
+    name: 'Current Challenges: Human Capital Formation & Rural Development',
+    subject: 'Economics',
+    description: 'Human Capital Formation: sources, role in economic development; Rural Development: credit and marketing systems, agricultural diversification, organic farming.',
+    weightageGuideline: 'Part B: Unit 7: 20 Marks Total',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'eco-9',
+    name: 'Employment & Sustainable Economic Development',
+    subject: 'Economics',
+    description: 'Employment: growth, formal and informal sectors, unemployment types and government initiatives; Sustainable Development: meaning, effects of economic development on environment, global warming, strategies for sustainable development.',
+    weightageGuideline: 'Part B: Unit 7: Part of 20 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+  {
+    id: 'eco-10',
+    name: 'Development Experience of India: Comparison with Neighbours',
+    subject: 'Economics',
+    description: 'Comparative development experiences of India, Pakistan, and China: economic growth, demographic indicators, sectoral contribution to GDP, human development index (HDI).',
+    weightageGuideline: 'Part B: Unit 8: 08 Marks',
+    rationalizedStatus: 'CBSE 2026-27 Official Syllabus',
+  },
+];
+
 export const RATIONALIZED_SYLLABUS_NOTICE = {
   academicYear: '2026–27 Academic Session (CBSE Official Syllabus)',
   cbseCurriculumNotice:
@@ -899,4 +1156,181 @@ export const CURATED_FALLBACK_QUESTIONS: Record<Subject, Question[]> = {
       sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Mathematics Unit VI: Probability)',
     },
   ],
+  Accountancy: [
+    {
+      id: 'fb-acc-1',
+      question: 'In the absence of an explicit partnership deed, at what annual interest rate is a partner entitled to receive interest on an advance or loan made to the firm beyond their capital?',
+      options: ['5% per annum', '6% per annum', '12% per annum', 'No interest is allowable'],
+      correctIndex: 1,
+      conciseExplanation: 'According to Section 13(d) of the Indian Partnership Act, 1932, in the absence of an agreement, partners are entitled to interest on loans at 6% p.a.',
+      detailedSolution: 'Step 1: Refer to the Indian Partnership Act 1932, Section 13.\nStep 2: When the deed is silent regarding loan interest, partner loans are treated as a charge against profits at a statutory rate of 6% p.a.\nStep 3: This interest is debited to Profit and Loss Account (not P&L Appropriation Account).',
+      subject: 'Accountancy',
+      chapter: 'Accounting for Partnership: Basic Concepts',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Accountancy Part I Ch 1)',
+    },
+    {
+      id: 'fb-acc-2',
+      question: 'When a new partner is admitted and brings their share of premium for goodwill in cash, to which account is this premium credited in the firm’s books?',
+      options: ['New Partner’s Capital Account', 'Revaluation Account', 'Premium for Goodwill Account', 'General Reserve Account'],
+      correctIndex: 2,
+      conciseExplanation: 'Cash brought in by an incoming partner for their share of goodwill is credited to the "Premium for Goodwill Account" and subsequently distributed to sacrificing partners.',
+      detailedSolution: 'Step 1: Journal entry upon receipt of goodwill: Bank/Cash A/c Dr. To Premium for Goodwill A/c.\nStep 2: Subsequent distribution: Premium for Goodwill A/c Dr. To Sacrificing Partners’ Capital A/cs (in sacrificing ratio).\nStep 3: Hence, the initial credit goes to Premium for Goodwill Account.',
+      subject: 'Accountancy',
+      chapter: 'Reconstitution of a Partnership: Admission of a Partner',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Accountancy Part I Ch 2)',
+    },
+    {
+      id: 'fb-acc-3',
+      question: 'Which of the following items is classified under "Cash Flows from Operating Activities" in a company’s Cash Flow Statement prepared under AS-3 (Revised)?',
+      options: ['Purchase of Machinery for cash', 'Cash proceeds from issue of equity shares', 'Cash receipts from sale of goods and rendering of services', 'Payment of long-term bank loan'],
+      correctIndex: 2,
+      conciseExplanation: 'Cash receipts from sale of goods arise from principal revenue-producing activities of the enterprise, hence classified as Operating Activities.',
+      detailedSolution: 'Step 1: Under AS 3 (Revised), Operating Activities are the primary revenue-generating activities.\nStep 2: Cash receipts from customers for goods/services are operating inflows.\nStep 3: Purchase of machinery is an Investing Activity; issue of shares and repayment of loans are Financing Activities.',
+      subject: 'Accountancy',
+      chapter: 'Cash Flow Statement',
+      difficulty: 'Medium',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Accountancy Part II Ch 5)',
+    },
+  ],
+  'Business Studies': [
+    {
+      id: 'fb-bst-1',
+      question: 'Which principle of general management formulated by Henri Fayol advocates that an employee should receive orders from one and only one superior?',
+      options: ['Unity of Direction', 'Unity of Command', 'Scalar Chain', 'Division of Work'],
+      correctIndex: 1,
+      conciseExplanation: 'Unity of Command states that each subordinate should have only one direct boss from whom they receive orders and to whom they are directly accountable, preventing confusion and conflict.',
+      detailedSolution: 'Step 1: Henri Fayol enunciated 14 classical principles of administrative management.\nStep 2: Unity of Command specifically dictates one boss per employee.\nStep 3: In contrast, Unity of Direction requires one head, one plan for a group of activities having the same objective.',
+      subject: 'Business Studies',
+      chapter: 'Principles of Management',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Business Studies Ch 2)',
+    },
+    {
+      id: 'fb-bst-2',
+      question: 'Which short-term money market instrument is issued by the Reserve Bank of India on behalf of the Central Government to meet temporary mismatches in cash flows?',
+      options: ['Commercial Paper', 'Treasury Bill (T-Bill)', 'Certificate of Deposit', 'Call Money'],
+      correctIndex: 1,
+      conciseExplanation: 'Treasury Bills (Zero Coupon Bonds) are promissory notes issued by the RBI on behalf of the Government of India for tenors of 91, 182, or 364 days.',
+      detailedSolution: 'Step 1: Treasury Bills are issued at a discount to face value and redeemed at par.\nStep 2: They are backed by sovereign guarantee, carry zero credit default risk, and have high liquidity in the Indian money market.',
+      subject: 'Business Studies',
+      chapter: 'Financial Markets',
+      difficulty: 'Medium',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Business Studies Ch 10)',
+    },
+  ],
+  Economics: [
+    {
+      id: 'fb-eco-1',
+      question: 'If the Marginal Propensity to Consume (MPC) in an economy is 0.8, what is the numerical value of the investment multiplier (k)?',
+      options: ['1.25', '2.5', '4.0', '5.0'],
+      correctIndex: 3,
+      conciseExplanation: 'The investment multiplier is k = 1 / (1 - MPC). With MPC = 0.8, k = 1 / (1 - 0.8) = 1 / 0.2 = 5.',
+      detailedSolution: 'Step 1: Multiplier formula: k = 1 / MPS = 1 / (1 - MPC).\nStep 2: Given MPC = 0.8.\nStep 3: Calculate MPS = 1 - 0.8 = 0.2.\nStep 4: k = 1 / 0.2 = 5.0.',
+      subject: 'Economics',
+      chapter: 'Determination of Income and Employment',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Macroeconomics Ch 4)',
+    },
+    {
+      id: 'fb-eco-2',
+      question: 'Which measure of government budget deficit reflects the total borrowing requirements of the government from all sources during a fiscal year?',
+      options: ['Revenue Deficit', 'Fiscal Deficit', 'Primary Deficit', 'Monetized Deficit'],
+      correctIndex: 1,
+      conciseExplanation: 'Fiscal Deficit = Total Expenditure - Total Receipts (excluding borrowings). It indicates the comprehensive debt requirement of the government.',
+      detailedSolution: 'Step 1: Fiscal Deficit represents the excess of total budgetary expenditure over non-debt creating receipts.\nStep 2: Fiscal Deficit = Borrowings and other liabilities.\nStep 3: Primary Deficit equals Fiscal Deficit minus interest payments.',
+      subject: 'Economics',
+      chapter: 'Government Budget and the Economy',
+      difficulty: 'Easy',
+      sourceNote: 'AI-generated NCERT-aligned practice (CBSE 2026–27 Syllabus • NCERT Class XII Macroeconomics Ch 5)',
+    },
+  ],
+};
+
+export function getChaptersForSubject(subject: Subject): ChapterInfo[] {
+  switch (subject) {
+    case 'Physics':
+      return CBSE_PHYSICS_CHAPTERS;
+    case 'Chemistry':
+      return CBSE_CHEMISTRY_CHAPTERS;
+    case 'Mathematics':
+      return CBSE_MATHEMATICS_CHAPTERS;
+    case 'Accountancy':
+      return CBSE_ACCOUNTANCY_CHAPTERS;
+    case 'Business Studies':
+      return CBSE_BUSINESS_STUDIES_CHAPTERS;
+    case 'Economics':
+      return CBSE_ECONOMICS_CHAPTERS;
+    default:
+      return [];
+  }
+}
+
+export function getSubjectsForStream(stream: 'Science' | 'Commerce'): Subject[] {
+  if (stream === 'Commerce') {
+    return ['Accountancy', 'Business Studies', 'Economics'];
+  }
+  return ['Physics', 'Chemistry', 'Mathematics'];
+}
+
+export const SUBJECT_METADATA: Record<
+  Subject,
+  {
+    code: string;
+    stream: 'Science' | 'Commerce';
+    description: string;
+    totalMarks: string;
+    theoryMarks: string;
+    accentColor: string;
+  }
+> = {
+  Physics: {
+    code: 'Code 042',
+    stream: 'Science',
+    description: 'Electrostatics, Magnetism, Optics, Modern Physics & Semiconductors.',
+    totalMarks: '100 (70 Theory + 30 Practical)',
+    theoryMarks: '70 Marks',
+    accentColor: '#38BDF8', // Cyan / Sky
+  },
+  Chemistry: {
+    code: 'Code 043',
+    stream: 'Science',
+    description: 'Solutions, Electrochemistry, Kinetics, d/f-Block, Coordination & Organic Chemistry.',
+    totalMarks: '100 (70 Theory + 30 Practical)',
+    theoryMarks: '70 Marks',
+    accentColor: '#34D399', // Emerald
+  },
+  Mathematics: {
+    code: 'Code 041',
+    stream: 'Science',
+    description: 'Relations, Calculus (Diff & Integrals), Vectors, 3D Geometry & Probability.',
+    totalMarks: '100 (80 Theory + 20 Internal)',
+    theoryMarks: '80 Marks',
+    accentColor: '#8B5CF6', // Electric Violet
+  },
+  Accountancy: {
+    code: 'Code 055',
+    stream: 'Commerce',
+    description: 'Partnership Accounts, Company Shares & Debentures, Ratios & Cash Flow Statements.',
+    totalMarks: '100 (80 Theory + 20 Project)',
+    theoryMarks: '80 Marks',
+    accentColor: '#F59E0B', // Amber / Gold
+  },
+  'Business Studies': {
+    code: 'Code 054',
+    stream: 'Commerce',
+    description: 'Principles of Management, Business Environment, Financial Markets & Marketing Mix.',
+    totalMarks: '100 (80 Theory + 20 Project)',
+    theoryMarks: '80 Marks',
+    accentColor: '#EC4899', // Pink / Rose
+  },
+  Economics: {
+    code: 'Code 030',
+    stream: 'Commerce',
+    description: 'Introductory Macroeconomics, National Income, Money & Indian Economic Development.',
+    totalMarks: '100 (80 Theory + 20 Project)',
+    theoryMarks: '80 Marks',
+    accentColor: '#06B6D4', // Cyan
+  },
 };

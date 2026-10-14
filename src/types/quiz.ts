@@ -4,13 +4,21 @@ export type Difficulty = 'Easy' | 'Medium' | 'Hard';
 
 export type QuizMode = 'practice' | 'timed';
 
+export type Language = 'en' | 'hi';
+
+export type Theme = 'light' | 'dark';
+
 export interface ChapterInfo {
   id: string;
   name: string;
+  nameHi?: string;
   subject: Subject;
   description: string;
+  descriptionHi?: string;
   weightageGuideline?: string;
+  weightageGuidelineHi?: string;
   rationalizedStatus?: string;
+  rationalizedStatusHi?: string;
 }
 
 export interface Question {
@@ -24,6 +32,7 @@ export interface Question {
   chapter: string;
   difficulty: Difficulty;
   sourceNote: string;
+  language?: Language;
 }
 
 export interface QuizConfig {
@@ -32,6 +41,7 @@ export interface QuizConfig {
   difficulty: Difficulty;
   questionCount: 5 | 10 | 15;
   mode: QuizMode;
+  language?: Language;
 }
 
 export interface UserAnswer {

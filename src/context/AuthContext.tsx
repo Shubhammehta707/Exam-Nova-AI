@@ -33,6 +33,8 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>;
   logout: () => Promise<void>;
   clearAuthError: () => void;
+  isGuest: boolean;
+  continueAsGuest: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -79,6 +81,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [authActionLoading, setAuthActionLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [isGuest, setIsGuest] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('examnova_guest_mode') === 'true';
+    }
+    return false;
+  });
+
+  const continueAsGuest = () => {
+    setIsGuest(true);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('examnova_guest_mode', 'true');
+    }
+  };
 
   // Sync or create user profile doc in Firestore
   const syncUserProfile = async (firebaseUser: User, customName?: string) => {
@@ -211,6 +226,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = async () => {
     setAuthActionLoading(true);
     setAuthError(null);
+    setIsGuest(false);
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('examnova_guest_mode');
+    }
     try {
       await firebaseSignOut(auth);
       setUser(null);
@@ -231,6 +250,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loading,
         authActionLoading,
         authError,
+        isGuest,
+        continueAsGuest,
         signInWithEmail,
         signUpWithEmail,
         signInWithGoogleProvider,

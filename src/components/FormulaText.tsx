@@ -20,14 +20,14 @@ export const FormulaText: React.FC<FormulaTextProps> = ({ text, className = '' }
     return parts.map((part, index) => {
       if (part.startsWith('^')) {
         return (
-          <sup key={index} className="text-[0.75em] font-semibold text-blue-900">
+          <sup key={index} className="text-[0.75em] font-semibold text-blue-800 dark:text-blue-300">
             {part.substring(1)}
           </sup>
         );
       }
       if (part.startsWith('_')) {
         return (
-          <sub key={index} className="text-[0.75em] font-semibold text-blue-900">
+          <sub key={index} className="text-[0.75em] font-semibold text-blue-800 dark:text-blue-300">
             {part.substring(1)}
           </sub>
         );
